@@ -1,10 +1,25 @@
-# OSX
-#
-.DS_Store
-
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @KenjiCrosland
+ Watch 2,436
+  Star 34,394
+ Fork 7,253 facebook/react-native
+ Code  Issues 849  Pull requests 193  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathreact-native/.gitignore
+aac7f5b  on May 16
+@janicduplessis janicduplessis Fix tests buck build when running locally
+10 contributors @mkonicek @vjeux @bestander @janicduplessis @ide @enaqx @eddiemonge @sahrens @spicyj @frantic
+RawBlameHistory     55 lines (48 sloc)  795 Bytes
 # Xcode
-#
-build/
+!**/*.xcodeproj
+!**/*.pbxproj
+!**/*.xcworkspacedata
+!**/*.xcsettings
+!**/*.xcscheme
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -22,19 +37,36 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
-# Android/IJ
-#
+# Gradle
+/build/
+/Examples/**/android/app/build/
+/Examples/**/android/app/gradle/
+/Examples/**/android/app/gradlew
+/Examples/**/android/app/gradlew.bat
+/ReactAndroid/build/
+
+# Buck
+.buckd
+buck-out
+/ReactAndroid/src/main/jni/prebuilt/lib/armeabi-v7a/
+/ReactAndroid/src/main/jni/prebuilt/lib/x86/
+
+# Android
 .idea
 .gradle
 local.properties
+*.iml
+/android/
 
-# node.js
-#
-node_modules/
-npm-debug.log
+# Node
+node_modules
+*.log
+.nvm
 
-# BUCK
-buck-out/
-\.buckd/
-android/app/libs
-android/keystores/debug.keystore
+# OS X
+.DS_Store
+
+# Test generated files
+/ReactAndroid/src/androidTest/assets/AndroidTestBundle.js
+Status API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help
