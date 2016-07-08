@@ -20,27 +20,6 @@ export class HabitScreen extends BaseComponent {
 		super(props);
 		this._bind('_renderRow', '_refreshData', '_renderHeader', '_renderFooter');
 
-		let realmHabits = realm.objects('Habit');
-		//Populating with mock data for now
-		if (realmHabits.length < 1) {
-			realm.write(()=> {
-			let bonusIntervalValue = 'day';
-			let newHabit = realm.create('Habit', {
-					name: 'Drink a glass of water',
-					pointValue: 1,
-					bonusInterval: bonusIntervalValue,
-					bonusFrequency: 5,
-					//Need to wrap a create habit method around the write
-				});
-			newHabit.intervals.push({
-				intervalStart: moment().startOf(bonusIntervalValue).toDate(),
-				intervalEnd: moment().endOf(bonusIntervalValue).toDate(),
-				allComplete: false
-				});
-			});
-		} else {
-			console.log(realmHabits);
-		}
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
