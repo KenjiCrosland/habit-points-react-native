@@ -34,7 +34,7 @@ export class HabitScreen extends BaseComponent {
 	_refreshData(){
 
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(data.habits)
+			dataSource: this.state.dataSource.cloneWithRows(realm.objects('Habit'))
 		})
 
 	}
@@ -112,7 +112,7 @@ var styles = StyleSheet.create({
 });
 
 
-
-var data = {
+//Mockdata in case I need it.
+var mockdata = {
 	habits:[{"_id":"574f9962221dcc0439baefde","startDate":"2016-06-02T02:26:42.347Z","name":"Drink a glass of water","bonusInterval":"day","pointValue":1,"bonusFrequency":6,"__v":3,"intervals":[{"intervalStart":"2016-06-01T07:00:00.000Z","intervalEnd":"2016-06-02T06:59:59.999Z","allComplete":false,"_id":"574f9967221dcc0439baefdf","completions":[{"pointValue":1,"_id":"574f9967221dcc0439baefe0"},{"pointValue":1,"_id":"574f9968221dcc0439baefe1"},{"pointValue":1,"_id":"574f9968221dcc0439baefe2"}]}]},{"_id":"574f9985221dcc0439baefe3","startDate":"2016-06-02T02:27:17.068Z","name":"5 minute meditation","bonusInterval":"day","pointValue":1,"bonusFrequency":3,"__v":2,"intervals":[{"intervalStart":"2016-06-05T07:00:00.000Z","intervalEnd":"2016-06-06T06:59:59.999Z","allComplete":false,"_id":"57548b2c221dcc0439baefea","completions":[{"pointValue":1,"_id":"57548b2c221dcc0439baefeb"},{"pointValue":1,"_id":"57548b33221dcc0439baefec"}]}]},{"_id":"57548e79221dcc0439baeff0","startDate":"2016-06-05T20:41:29.131Z","name":"Work on Habit Points","bonusInterval":"week","pointValue":4,"bonusFrequency":5,"__v":0,"intervals":[]}]
 }
