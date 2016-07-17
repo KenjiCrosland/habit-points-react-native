@@ -7,6 +7,7 @@ import {
 
 import {HabitScreen} from './HabitScreen';
 import {NewHabitScreen} from './NewHabitScreen';
+import realm from './Realm';
 
 export class HabitPointsNavigator extends Component {
 	constructor(props) {
@@ -16,7 +17,7 @@ export class HabitPointsNavigator extends Component {
 	_renderScene(route, navigator) {
     	var Component = route.component;
     	return (
-      		<Component {...route.props} navigator={navigator} route={route} />
+      		<Component {...route.props} navigator={navigator} route={route} events={this.props.events} />
     	);
   	}
   render() {
@@ -24,10 +25,13 @@ export class HabitPointsNavigator extends Component {
 		{component: HabitScreen, index: 0},
 		{component: NewHabitScreen, index: 1}
   	];
+ 
     return (
     	<Navigator
-    	initialRoute={routes[0]}
-    	initialRouteStack={routes}
+    	initialRoute={{
+        component: HabitScreen,
+        index: 0
+      }}
     	renderScene={this._renderScene}
     	navigationBar={
     		  <Navigator.NavigationBar
@@ -48,7 +52,10 @@ export class HabitPointsNavigator extends Component {
            {
            if (route.index === 0){
             return (
-              <TouchableHighlight onPress={() => navigator.push(routes[1])}>
+              <TouchableHighlight onPress={() => navigator.push({
+                component: NewHabitScreen,
+                index: 1
+              })}>
               <Text>New Habit!</Text>
               </TouchableHighlight>
             )

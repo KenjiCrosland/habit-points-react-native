@@ -35,7 +35,6 @@ export class NewHabitScreen extends BaseComponent {
 					pointValue: parseInt(this.state.pointValue),
 					bonusInterval: this.state.bonusInterval,
 					bonusFrequency: parseInt(this.state.bonusFrequency),
-					//Need to wrap a create habit method around the write
 				});
 			newHabit.intervals.push({
 				intervalStart: moment().startOf(this.state.bonusInterval).toDate(),
@@ -43,7 +42,9 @@ export class NewHabitScreen extends BaseComponent {
 				allComplete: false
 				});
 			});
-		 console.log(realm.objects('Habit'));
+		
+		 this.props.events.emit('habitSaved');
+		 this.props.navigator.pop();
 	}
 
 	render(){

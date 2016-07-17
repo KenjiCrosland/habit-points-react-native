@@ -8,6 +8,8 @@ import {
 import { ListView } from 'realm/react-native';
 import {HabitListItem} from './HabitListItem';
 import realm from './Realm';
+import reactMixin from 'react-mixin'
+import Subscribable from 'Subscribable';
 
 class BaseComponent extends Component {
  _bind(...methods) {
@@ -19,7 +21,6 @@ export class HabitScreen extends BaseComponent {
 	constructor(props) {
 		super(props);
 		this._bind('_renderRow', '_refreshData', '_renderHeader', '_renderFooter');
-
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
@@ -28,9 +29,10 @@ export class HabitScreen extends BaseComponent {
 	}
 
 	componentDidMount(){
+		this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
 		this._refreshData();
 	}
-
+	
 	_refreshData(){
 
 		this.setState({
@@ -75,6 +77,7 @@ export class HabitScreen extends BaseComponent {
 
 	}
 }
+reactMixin(HabitScreen.prototype, Subscribable.Mixin);
 
 var styles = StyleSheet.create({
   container: {
