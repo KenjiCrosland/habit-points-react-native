@@ -12,15 +12,15 @@ import reactMixin from 'react-mixin'
 import Subscribable from 'Subscribable';
 
 class BaseComponent extends Component {
- _bind(...methods) {
-  methods.forEach( (method) => this[method] = this[method].bind(this) );
- }
+	_bind(...methods) {
+		methods.forEach( (method) => this[method] = this[method].bind(this) );
+	}
 }
 
 export class HabitScreen extends BaseComponent {
 	constructor(props) {
 		super(props);
-		this._bind('_renderRow', '_refreshData', '_renderHeader', '_renderFooter');
+		this._bind('_renderRow', '_refreshData', '_renderHeader', '_renderFooter', '_addCompletion', '_removeCompletion');
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
@@ -32,17 +32,51 @@ export class HabitScreen extends BaseComponent {
 		this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
 		this._refreshData();
 	}
+
+	_addCompletion(habit){
+		let completedOn = new Date();
+		let currentInterval = habit.intervals[habit.intervals.length - 1];
+		realm.write(() => {
+			if (!habit.intervals.length ||
+				moment(currentInterval.intervalEnd).isBefore(completedOn) ||
+				currentInterval.allComplete === true){
+				habit.intervals.push({
+					intervalStart: moment().startOf(habit.bonusInterval).toDate(),
+					intervalEnd: moment().endOf(habit.bonusInterval).toDate(),
+					allComplete: false,
+					completions:[]
+				});
+		}
+		if (habit.intervals.length){
+			currentInterval.completions.push({
+				completedOn: completedOn,
+				pointValue: habit.pointValue
+			});
+			if(currentInterval.completions.length === habit.bonusFrequency) {
+				currentInterval.allComplete = true;
+			}
+		}
+	});
+		this._refreshData();
+	}
+
+	_removeCompletion(habit){
+		if (habit.intervals.length && habit.intervals[habit.intervals.length - 1].completions.length) {
+			realm.write(() => {
+				habit.intervals[habit.intervals.length - 1].completions.pop()
+			})
+		}
+		this._refreshData();
+	}
 	
 	_refreshData(){
-
 		this.setState({
 			dataSource: this.state.dataSource.cloneWithRows(realm.objects('Habit'))
 		})
-
 	}
 
 	_renderRow(rowData){
-		return <HabitListItem habit={rowData}/>;
+		return <HabitListItem habit={rowData} addCompletion={this._addCompletion} removeCompletion={this._removeCompletion}/>;
 	}
 
 	_renderHeader(){
@@ -52,66 +86,66 @@ export class HabitScreen extends BaseComponent {
 			HabitPoints!
 			</Text>
 			</View>
-		)
+			)
 	}
 
 	_renderFooter(){
 		return(
 			<View style={styles.sectionDivider}>
 			<Text>
-				Copyright by me!
+			Copyright by me!
 			</Text>
 			</View>
-		)
+			)
 	}
 
 	render(){
 		return(
-		<ListView
-		dataSource={this.state.dataSource}
-		renderRow={this._renderRow}
-		renderHeader={this._renderHeader}
-		renderFooter={this._renderFooter}
-		/>
-		)
+			<ListView
+			dataSource={this.state.dataSource}
+			renderRow={this._renderRow}
+			renderHeader={this._renderHeader}
+			renderFooter={this._renderFooter}
+			/>
+			)
 
 	}
 }
 reactMixin(HabitScreen.prototype, Subscribable.Mixin);
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingTop: 24
-  },
-  list: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  listContent: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  row: {
-    flex: 1,
-    fontSize: 24,
-    padding: 42,
-    borderWidth: 1,
-    borderColor: '#DDDDDD'
-  },
-  sectionDivider: {
-    padding: 8,
-    backgroundColor: '#EEEEEE',
-    alignItems: 'center'
-  },
-  headingText: {
-    flex: 1,
-    fontSize: 24,
-    alignSelf: 'center'
-  }
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#FFFFFF',
+		paddingTop: 24
+	},
+	list: {
+		flex: 1,
+		flexDirection: 'row'
+	},
+	listContent: {
+		flex: 1,
+		flexDirection: 'column'
+	},
+	row: {
+		flex: 1,
+		fontSize: 24,
+		padding: 42,
+		borderWidth: 1,
+		borderColor: '#DDDDDD'
+	},
+	sectionDivider: {
+		padding: 8,
+		backgroundColor: '#EEEEEE',
+		alignItems: 'center'
+	},
+	headingText: {
+		flex: 1,
+		fontSize: 24,
+		alignSelf: 'center'
+	}
 });
 
 

@@ -38,7 +38,7 @@ export class HabitListItem extends Component {
 			} else {
 				completed = true;
 			}
-			completions.push(<CompletionButton completed={completed}/>);
+			completions.push(<CompletionButton completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>

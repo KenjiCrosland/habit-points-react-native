@@ -18,20 +18,28 @@ export class CompletionButton extends Component {
 	}
 
 	_onPressIn(){
-		this.setState({completed: this.state.completed ? false : true});
-		//Function to pass up when we have a db
+		this.setState({completed: this.state.completed ? false : true}, function(){
+			if(this.state.completed === true){
+				this.props.addCompletion(this.props.habit);
+			}
+			else{
+				this.props.removeCompletion(this.props.habit);
+			}
+		})
+
+		//probably need to do a query for the id?
 	}
 
 	render(){
 		return(
 			<TouchableHighlight 
 			onPress={this._onPressIn}
-style={[styles.base, this.state.completed && styles.completed]}>
-				<View style={styles.transparent}>
-				<Text style={styles.checkmark}>
-				{this.state.completed ? '\u2713' : ''}
-				</Text>
-				</View>
+			style={[styles.base, this.state.completed && styles.completed]}>
+			<View style={styles.transparent}>
+			<Text style={styles.checkmark}>
+			{this.state.completed ? '\u2713' : ''}
+			</Text>
+			</View>
 			</TouchableHighlight>
 			);
 	}
@@ -67,32 +75,3 @@ var styles = StyleSheet.create({
 
 
 })
-
-// var CompletionButton = React.createClass({
-//   getInitialState: function () {
-//     return {
-//         completed: this.props.completed || false
-//      };
-//   },
-// 	render: function() {
-// 		var completionChange = this.props.onHabitCompletion;
-// 		var habitId = this.props.habit._id;
-// 		var toggleCheck = this.toggleCheck;
-// 		return (
-// 			<li>
-// 			<label>
-// 			<input type="checkbox" 
-// 				checked={this.state.checked}
-// 				onChange={function(e){
-// 					toggleCheck(e);
-// 					completionChange(habitId, e.target.checked);
-// 				}}
-// 				/>
-// 			</label>
-// 			</li>
-// 		)
-// 	},
-// 	toggleCheck: function(e){
-// 		this.setState({checked: e.target.checked});
-// 	}
-// });

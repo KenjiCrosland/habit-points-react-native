@@ -39,7 +39,8 @@ export class NewHabitScreen extends BaseComponent {
 			newHabit.intervals.push({
 				intervalStart: moment().startOf(this.state.bonusInterval).toDate(),
 				intervalEnd: moment().endOf(this.state.bonusInterval).toDate(),
-				allComplete: false
+				allComplete: false,
+				completions: []
 				});
 			});
 		
