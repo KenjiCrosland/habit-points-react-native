@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {CompletionButton} from './CompletionButton';
 import {FadeInView} from './FadeInView';
+import {EditHabitScreen} from './EditHabitScreen';
 
 export class HabitListItem extends Component {
 	constructor(props) {
@@ -17,14 +18,24 @@ export class HabitListItem extends Component {
 			overlayVisible: false
 		}
 		this._onPressRow = this._onPressRow.bind(this);
+		this._onPressEdit = this._onPressEdit.bind(this);
 	}
 
 	_onPressRow() {
 		this.setState({overlayVisible: !this.state.overlayVisible});
 	}
+	_onPressEdit(habit) {
+		 this.props.navigator.push({
+		 	    component: EditHabitScreen,
+                index: 2,
+                props: { habit: this.state.habit }
+		 });
+	}
 
 	render(){
+
 		var habit = this.state.habit;
+			console.log(habit);
 		if (!habit.intervals[habit.intervals.length - 1]){
 			recentCompletions = [];
 		} else { 
@@ -42,25 +53,30 @@ export class HabitListItem extends Component {
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>
-				<View>
-				{
-					this.state.overlayVisible ? null :
-					(<View style={styles.container}>
-						<Text>{habit.name}</Text>
+			<View>
+			{
+				this.state.overlayVisible ? null :
+				(<View style={styles.container}>
+					<Text>{habit.name}</Text>
 					</View>)
-				}
-				{
-					this.state.overlayVisible ? 
-					(<FadeInView style={styles.overlay}>
-					 <Text>{habit.name}</Text>
-						<View style={styles.row}>
-							{completions}
-						</View>
+			}
+			{
+				this.state.overlayVisible ? 
+				(<FadeInView style={styles.overlay}>
+					<Text>{habit.name}</Text>
+					<View style={styles.row}>
+					{completions}
+					</View>
+					<TouchableHighlight onPress={this._onPressEdit}>
+					<Text style={styles.editButton}>
+					Edit Habit
+					</Text>
+					</TouchableHighlight>
 					</FadeInView>) : null
-				}
-				</View>
+			}
+			</View>
 			</TouchableHighlight>
-		)
+			)
 	}
 }
 
@@ -76,5 +92,9 @@ var styles = StyleSheet.create({
 		marginBottom: 10,
 		flexDirection: 'row',
 		justifyContent: 'center'
+	},
+	editButton:{
+		color: '#1D62F0',
+		textAlign: 'center'
 	}
 })

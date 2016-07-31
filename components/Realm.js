@@ -6,11 +6,13 @@ class Habit extends Realm.Object {}
 
 Habit.schema = {
 	name: 'Habit',
+	primaryKey: 'id',
 	properties: {
+		id: 'int', 
 		name: 'string',
 		pointValue: 'int',
 		//Bonus interval: day, week, month
-		bonusInteval: {type: 'string', default: 'day'},
+		bonusInterval: {type: 'string', default: 'day'},
 		bonusFrequency: 'int',
 		intervals: {type:'list', objectType: 'Interval'}
 	}
@@ -20,7 +22,9 @@ class Interval extends Realm.Object {}
 
 Interval.schema = {
 	name: 'Interval',
+	primaryKey: 'id',
 	properties: {
+		id: 'int', 
 		intervalStart: 'date',
 		intervalEnd: 'date',
 		allComplete: 'bool',
@@ -32,7 +36,9 @@ class Completion extends Realm.Object {}
 
 Completion.schema = {
 	name: 'Completion',
+	primaryKey: 'id',
 	properties: {
+	    id: 'int', 
 		completedOn: 'date',
 		pointValue: 'int'
 	}

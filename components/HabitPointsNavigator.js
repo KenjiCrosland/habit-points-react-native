@@ -7,6 +7,7 @@ import {
 
 import {HabitScreen} from './HabitScreen';
 import {NewHabitScreen} from './NewHabitScreen';
+import {EditHabitScreen} from './EditHabitScreen';
 import realm from './Realm';
 
 export class HabitPointsNavigator extends Component {
@@ -23,7 +24,8 @@ export class HabitPointsNavigator extends Component {
   render() {
   	const routes = [
 		{component: HabitScreen, index: 0},
-		{component: NewHabitScreen, index: 1}
+		{component: NewHabitScreen, index: 1},
+    {component: EditHabitScreen, index: 2}
   	];
  
     return (

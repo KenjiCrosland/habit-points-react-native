@@ -40,7 +40,9 @@ export class HabitScreen extends BaseComponent {
 			if (!habit.intervals.length ||
 				moment(currentInterval.intervalEnd).isBefore(completedOn) ||
 				currentInterval.allComplete === true){
+				var nextID = habit.intervals.length + 1 + Date.now();
 				habit.intervals.push({
+					id: nextID,
 					intervalStart: moment().startOf(habit.bonusInterval).toDate(),
 					intervalEnd: moment().endOf(habit.bonusInterval).toDate(),
 					allComplete: false,
@@ -48,7 +50,9 @@ export class HabitScreen extends BaseComponent {
 				});
 		}
 		if (habit.intervals.length){
+			var nextID = currentInterval.completions.length + 1 + Date.now();
 			currentInterval.completions.push({
+				id: nextID,
 				completedOn: completedOn,
 				pointValue: habit.pointValue
 			});
@@ -76,7 +80,7 @@ export class HabitScreen extends BaseComponent {
 	}
 
 	_renderRow(rowData){
-		return <HabitListItem habit={rowData} addCompletion={this._addCompletion} removeCompletion={this._removeCompletion}/>;
+		return <HabitListItem habit={rowData} navigator={this.props.navigator} addCompletion={this._addCompletion} removeCompletion={this._removeCompletion}/>;
 	}
 
 	_renderHeader(){
@@ -103,6 +107,7 @@ export class HabitScreen extends BaseComponent {
 		return(
 			<ListView
 			dataSource={this.state.dataSource}
+			enableEmptySections={true}
 			renderRow={this._renderRow}
 			renderHeader={this._renderHeader}
 			renderFooter={this._renderFooter}
@@ -143,6 +148,8 @@ var styles = StyleSheet.create({
 	},
 	headingText: {
 		flex: 1,
+		height: 40,
+		paddingTop: 10,
 		fontSize: 24,
 		alignSelf: 'center'
 	}
