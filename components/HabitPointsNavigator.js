@@ -6,8 +6,7 @@ import {
 } from 'react-native';
 
 import {HabitScreen} from './HabitScreen';
-import {NewHabitScreen} from './NewHabitScreen';
-import {EditHabitScreen} from './EditHabitScreen';
+import {HabitFormScreen} from './HabitFormScreen';
 import realm from './Realm';
 
 export class HabitPointsNavigator extends Component {
@@ -24,8 +23,7 @@ export class HabitPointsNavigator extends Component {
   render() {
   	const routes = [
 		{component: HabitScreen, index: 0},
-		{component: NewHabitScreen, index: 1},
-    {component: EditHabitScreen, index: 2}
+		{component: HabitFormScreen, index: 1}
   	];
  
     return (
@@ -55,7 +53,7 @@ export class HabitPointsNavigator extends Component {
            if (route.index === 0){
             return (
               <TouchableHighlight onPress={() => navigator.push({
-                component: NewHabitScreen,
+                component: HabitFormScreen,
                 index: 1
               })}>
               <Text>New Habit!</Text>

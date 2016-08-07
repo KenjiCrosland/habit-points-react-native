@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import {CompletionButton} from './CompletionButton';
 import {FadeInView} from './FadeInView';
-import {EditHabitScreen} from './EditHabitScreen';
+import {HabitFormScreen} from '../HabitFormScreen';
 
 export class HabitListItem extends Component {
 	constructor(props) {
@@ -26,7 +26,7 @@ export class HabitListItem extends Component {
 	}
 	_onPressEdit(habit) {
 		 this.props.navigator.push({
-		 	    component: EditHabitScreen,
+		 	    component: HabitFormScreen,
                 index: 2,
                 props: { habit: this.state.habit }
 		 });
@@ -35,7 +35,6 @@ export class HabitListItem extends Component {
 	render(){
 
 		var habit = this.state.habit;
-			console.log(habit);
 		if (!habit.intervals[habit.intervals.length - 1]){
 			recentCompletions = [];
 		} else { 
@@ -49,7 +48,7 @@ export class HabitListItem extends Component {
 			} else {
 				completed = true;
 			}
-			completions.push(<CompletionButton completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
+			completions.push(<CompletionButton key={habit.id + i} completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>

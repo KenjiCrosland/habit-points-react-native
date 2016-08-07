@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { ListView } from 'realm/react-native';
 import {HabitListItem} from './HabitListItem';
-import realm from './Realm';
+import realm from '../Realm';
 import reactMixin from 'react-mixin'
 import Subscribable from 'Subscribable';
 
