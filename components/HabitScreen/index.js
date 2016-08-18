@@ -9,6 +9,7 @@ import { ListView } from 'realm/react-native';
 import {HabitListItem} from './HabitListItem';
 import realm from '../Realm';
 import reactMixin from 'react-mixin'
+import _ from 'lodash';
 import Subscribable from 'Subscribable';
 
 class BaseComponent extends Component {
@@ -20,7 +21,15 @@ class BaseComponent extends Component {
 export class HabitScreen extends BaseComponent {
 	constructor(props) {
 		super(props);
-		this._bind('_renderRow', '_refreshData', '_renderHeader', '_renderFooter', '_addCompletion', '_removeCompletion');
+		this._bind(
+			'_renderRow', 
+			'_refreshData', 
+			'_renderHeader', 
+			'_renderFooter', 
+			'_addCompletion', 
+			'_removeCompletion', 
+			'_isComplete',
+			'_dateRangeIsCurrent');
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
@@ -30,17 +39,20 @@ export class HabitScreen extends BaseComponent {
 
 	componentDidMount(){
 		this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
+		this.addListenerOn(this.props.events, 'allCompleted', this._refreshData);
 		this._refreshData();
 	}
 
 	_addCompletion(habit){
 		let completedOn = new Date();
 		let currentInterval = habit.intervals[habit.intervals.length - 1];
+				console.log(currentInterval.intervalStart);
+		//current interval may not be defined. This completion code needs a look
 		realm.write(() => {
 			if (!habit.intervals.length ||
 				moment(currentInterval.intervalEnd).isBefore(completedOn) ||
 				currentInterval.allComplete === true){
-				var nextID = habit.intervals.length + 1 + Date.now();
+				let nextID = habit.intervals.length + 1 + Date.now();
 				habit.intervals.push({
 					id: nextID,
 					intervalStart: moment().startOf(habit.bonusInterval).toDate(),
@@ -49,8 +61,10 @@ export class HabitScreen extends BaseComponent {
 					completions:[]
 				});
 		}
-		if (habit.intervals.length){
-			var nextID = currentInterval.completions.length + 1 + Date.now();
+		//console.log(currentInterval.completions);
+		console.log("bonusFrequency" + habit.bonusFrequency);
+		if (habit.intervals.length ){
+			let nextID = currentInterval.completions.length + 1 + Date.now();
 			currentInterval.completions.push({
 				id: nextID,
 				completedOn: completedOn,
@@ -58,6 +72,16 @@ export class HabitScreen extends BaseComponent {
 			});
 			if(currentInterval.completions.length === habit.bonusFrequency) {
 				currentInterval.allComplete = true;
+				let nextID = habit.intervals.length + 1 + Date.now();
+				let durationToAdd = moment.duration(1, habit.bonusInterval);
+				habit.intervals.push({
+					id: nextID,
+					intervalStart: moment().startOf(habit.bonusInterval).add(durationToAdd).toDate(),
+					intervalEnd: moment().endOf(habit.bonusInterval).add(durationToAdd).toDate(),
+					allComplete: false,
+					completions:[]
+				});
+				this.props.events.emit('allCompleted');
 			}
 		}
 	});
@@ -74,13 +98,50 @@ export class HabitScreen extends BaseComponent {
 	}
 	
 	_refreshData(){
+		//realm.objects(outerObject).filter("innerObject.sortId = 3")
+		let habits = realm.objects('Habit');
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(realm.objects('Habit'))
+			dataSource: this.state.dataSource.cloneWithRows(habits)
 		})
 	}
+	_isComplete(habit) {
+		//Check to see if the habit array is completed
+		if (habit.intervals.length && habit.intervals[habit.intervals.length - 1].allComplete === true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	_dateRangeIsCurrent(habit) {
+		let lastInterval = habit.intervals[habit.intervals.length - 1];
+		if (moment(new Date).isBetween(lastInterval.intervalStart, lastInterval.intervalEnd)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	_renderRow(rowData){
-		return <HabitListItem habit={rowData} navigator={this.props.navigator} addCompletion={this._addCompletion} removeCompletion={this._removeCompletion}/>;
+		 if(!this._isComplete(rowData) && this._dateRangeIsCurrent(rowData)){
+			return <HabitListItem 
+					habit={rowData} 
+					navigator={this.props.navigator} 
+					addCompletion={this._addCompletion}
+					removeCompletion={this._removeCompletion}/>;
+		 }  else {
+		 	return null;
+		 }
+		//else if(!this._dateRangeIsCurrent(rowData)){
+		// 	return <Text style={styles.hidden} >Date is not current</Text>;
+		// } else if(this._isComplete(rowData) && this._dateRangeIsCurrent(rowData)) {
+		// 	return null;
+		// } else {
+		// 	return <HabitListItem 
+		// 			habit={rowData} 
+		// 			navigator={this.props.navigator} 
+		// 			addCompletion={this._addCompletion}
+		// 			removeCompletion={this._removeCompletion}/>;
+		// }
 	}
 
 	_renderHeader(){

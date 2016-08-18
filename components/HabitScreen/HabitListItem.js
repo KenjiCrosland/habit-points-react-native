@@ -33,7 +33,6 @@ export class HabitListItem extends Component {
 	}
 
 	render(){
-
 		var habit = this.state.habit;
 		if (!habit.intervals[habit.intervals.length - 1]){
 			recentCompletions = [];
