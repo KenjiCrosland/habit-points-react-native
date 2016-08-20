@@ -98,7 +98,7 @@ export class HabitScreen extends BaseComponent {
 		this._refreshData();
 	}
 	_loadInitialData(){
-		let habits = realm.objects('Habit');
+		let habits = realm.objects('Habit').sorted('pointValue');
 		for (h in habits){
 			let habit = habits[h];
 			if(!this._dateRangeIsCurrent(habit) && !this._hasPendingIntervals(habit)){

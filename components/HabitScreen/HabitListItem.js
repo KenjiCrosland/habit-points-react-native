@@ -19,6 +19,7 @@ export class HabitListItem extends Component {
 		}
 		this._onPressRow = this._onPressRow.bind(this);
 		this._onPressEdit = this._onPressEdit.bind(this);
+		this._returnDisplayInterval = this._returnDisplayInterval.bind(this);
 	}
 
 	_onPressRow() {
@@ -32,15 +33,29 @@ export class HabitListItem extends Component {
 		 });
 	}
 
+	_returnDisplayInterval(habit){
+		switch(habit.bonusInterval){
+			case 'day':
+				return 'Daily';
+			case 'week':
+				return 'Weekly';
+			case 'month':
+				return 'Monthly';
+			default:
+				return 'Daily';
+		}
+	}
+
 	render(){
-		var habit = this.state.habit;
+		let habit = this.state.habit;
+		var recentCompletions;
 		if (!habit.intervals[habit.intervals.length - 1]){
 			recentCompletions = [];
 		} else { 
 			recentCompletions = habit.intervals[habit.intervals.length - 1].completions;
 		}
-		var completions = [];
-		for(var i = 0; i < habit.bonusFrequency; i++) {
+		let completions = [];
+		for(let i = 0; i < habit.bonusFrequency; i++) {
 			var completed;
 			if (recentCompletions.length <= i)  {
 				completed = false;
@@ -55,22 +70,28 @@ export class HabitListItem extends Component {
 			{
 				this.state.overlayVisible ? null :
 				(<View style={styles.container}>
-					<Text>{habit.name}</Text>
-					</View>)
+					<Text style={styles.habitName}>{habit.name}</Text>
+					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
+				</View>)
 			}
 			{
 				this.state.overlayVisible ? 
-				(<FadeInView style={styles.overlay}>
-					<Text>{habit.name}</Text>
+
+				(<FadeInView>
+					<View style={[styles.container, styles.expanded]}>
+					<Text style={styles.habitName}>{habit.name}</Text>
+					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
 					<View style={styles.row}>
-					{completions}
+						{completions}
 					</View>
+
 					<TouchableHighlight onPress={this._onPressEdit}>
-					<Text style={styles.editButton}>
-					Edit Habit
-					</Text>
+						<Text style={styles.editButton}>
+							Edit Habit
+						</Text>
 					</TouchableHighlight>
-					</FadeInView>) : null
+					</View>
+				</FadeInView>) : null
 			}
 			</View>
 			</TouchableHighlight>
@@ -82,7 +103,25 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		flexDirection: 'column',
-		height: 125
+		height: 75,
+		alignItems: 'center',
+		paddingTop: 10,
+		borderTopWidth: 1,
+		borderTopColor: '#dddddd',
+		borderBottomWidth: 1,
+		borderBottomColor: '#eeeeee'
+
+	},
+	expanded:{
+		height: 135,
+		paddingBottom: 10
+	},
+	habitName: {
+		fontSize: 18,
+		textAlign: 'center'
+	},
+	goal: {
+		textAlign: 'center'
 	},
 	row:{
 		flex: 1,
