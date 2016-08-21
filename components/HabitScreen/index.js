@@ -154,6 +154,7 @@ export class HabitScreen extends BaseComponent {
 	_renderRow(rowData){
 		 if(!this._isComplete(rowData) && this._dateRangeIsCurrent(rowData)){
 			return <HabitListItem 
+					style={styles.listitem}
 					habit={rowData} 
 					navigator={this.props.navigator} 
 					addCompletion={this._addCompletion}
@@ -164,28 +165,18 @@ export class HabitScreen extends BaseComponent {
 	}
 
 	_renderHeader(){
-		return(
-			<View style={styles.sectionDivider}>
-			<Text style={styles.headingText}>
-			HabitPoints!
-			</Text>
-			</View>
-			)
+		return null;
+
 	}
 
 	_renderFooter(){
-		return(
-			<View style={styles.sectionDivider}>
-			<Text>
-			Copyright by me!
-			</Text>
-			</View>
-			)
+		return null;
 	}
 
 	render(){
 		return(
 			<ListView
+			style={styles.listview}
 			dataSource={this.state.dataSource}
 			enableEmptySections={true}
 			renderRow={this._renderRow}
@@ -206,32 +197,14 @@ var styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 		paddingTop: 24
 	},
-	list: {
-		flex: 1,
-		flexDirection: 'row'
+	listview:{
+		marginTop: 60,
 	},
-	listContent: {
-		flex: 1,
-		flexDirection: 'column'
-	},
-	row: {
-		flex: 1,
-		fontSize: 24,
-		padding: 42,
-		borderWidth: 1,
-		borderColor: '#DDDDDD'
-	},
-	sectionDivider: {
-		padding: 8,
-		backgroundColor: '#EEEEEE',
-		alignItems: 'center'
-	},
-	headingText: {
-		flex: 1,
-		height: 40,
-		paddingTop: 10,
-		fontSize: 24,
-		alignSelf: 'center'
+	listitem:{
+		borderTopWidth: 1,
+		borderTopColor: '#dddddd',
+		borderBottomWidth: 1,
+		borderBottomColor: '#eeeeee'
 	}
 });
 

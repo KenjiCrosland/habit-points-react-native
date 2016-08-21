@@ -20,6 +20,7 @@ export class HabitListItem extends Component {
 		this._onPressRow = this._onPressRow.bind(this);
 		this._onPressEdit = this._onPressEdit.bind(this);
 		this._returnDisplayInterval = this._returnDisplayInterval.bind(this);
+		this._returnPointValueString = this._returnPointValueString.bind(this);
 	}
 
 	_onPressRow() {
@@ -31,6 +32,13 @@ export class HabitListItem extends Component {
                 index: 2,
                 props: { habit: this.state.habit }
 		 });
+	}
+
+	_returnPointValueString(habit){
+		if(habit.pointValue === 1){
+			return '1 Point';
+		}
+		return habit.pointValue + ' Points';
 	}
 
 	_returnDisplayInterval(habit){
@@ -66,10 +74,13 @@ export class HabitListItem extends Component {
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>
-			<View>
+			<View style={[styles.container, this.state.overlayVisible && styles.expanded]}>
+			<View style={styles.goalContainer}>
+				<Text>{this._returnPointValueString(habit)}</Text>
+			</View>
 			{
 				this.state.overlayVisible ? null :
-				(<View style={styles.container}>
+				(<View style={styles.habitNameContainer}>
 					<Text style={styles.habitName}>{habit.name}</Text>
 					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
 				</View>)
@@ -77,8 +88,8 @@ export class HabitListItem extends Component {
 			{
 				this.state.overlayVisible ? 
 
-				(<FadeInView>
-					<View style={[styles.container, styles.expanded]}>
+				(<FadeInView style={styles.habitNameContainer}>
+					<View>
 					<Text style={styles.habitName}>{habit.name}</Text>
 					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
 					<View style={styles.row}>
@@ -102,15 +113,23 @@ export class HabitListItem extends Component {
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: 'column',
 		height: 75,
-		alignItems: 'center',
-		paddingTop: 10,
 		borderTopWidth: 1,
 		borderTopColor: '#dddddd',
 		borderBottomWidth: 1,
 		borderBottomColor: '#eeeeee'
 
+	},
+	goalContainer: {
+		alignSelf: 'flex-start'
+		width: 55
+	},
+	habitNameContainer: {
+		flex: 1,
+		flexDirection: 'column',
+		alignSelf: 'center',
+		paddingTop: 10,
+		width: 250
 	},
 	expanded:{
 		height: 135,
