@@ -3,12 +3,13 @@ import {
 	StyleSheet,
 	TouchableHighlight,
 	View,
-	Text
+	Text,
+	Dimensions
 } from 'react-native';
 import {CompletionButton} from './CompletionButton';
 import {FadeInView} from './FadeInView';
 import {HabitFormScreen} from '../HabitFormScreen';
-
+let deviceWidth = Dimensions.get('window').width;
 export class HabitListItem extends Component {
 	constructor(props) {
 		super(props);
@@ -36,9 +37,9 @@ export class HabitListItem extends Component {
 
 	_returnPointValueString(habit){
 		if(habit.pointValue === 1){
-			return '1 Point';
+			return '1 Pt';
 		}
-		return habit.pointValue + ' Points';
+		return habit.pointValue + ' Pts';
 	}
 
 	_returnDisplayInterval(habit){
@@ -63,6 +64,7 @@ export class HabitListItem extends Component {
 			recentCompletions = habit.intervals[habit.intervals.length - 1].completions;
 		}
 		let completions = [];
+		let indicators = [];
 		for(let i = 0; i < habit.bonusFrequency; i++) {
 			var completed;
 			if (recentCompletions.length <= i)  {
@@ -71,28 +73,38 @@ export class HabitListItem extends Component {
 				completed = true;
 			}
 			completions.push(<CompletionButton key={habit.id + i} completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
+			indicators.push(<View key={habit.id + i} style={[styles.indicator, completed && styles.completed]}></View>)
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>
-			<View style={[styles.container, this.state.overlayVisible && styles.expanded]}>
-			<View style={styles.goalContainer}>
-				<Text>{this._returnPointValueString(habit)}</Text>
+			<View>
+
+			{this.state.overlayVisible ? null :
+			(<View style={styles.container}>
+				<View style={styles.pointValueContainer}>
+					<Text style={styles.pointValue}>{this._returnPointValueString(habit)}</Text>
 			</View>
-			{
-				this.state.overlayVisible ? null :
-				(<View style={styles.habitNameContainer}>
-					<Text style={styles.habitName}>{habit.name}</Text>
-					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
-				</View>)
-			}
+				<View style={styles.habitNameContainer}>
+				<Text style={styles.habitName}>{habit.name}</Text>
+				<View style={styles.indicatorRow}>
+					<Text>{this._returnDisplayInterval(habit)} Bonus:</Text>{indicators}
+				</View>
+			</View>
+			</View>
+			)}
 			{
 				this.state.overlayVisible ? 
 
 				(<FadeInView style={styles.habitNameContainer}>
-					<View>
-					<Text style={styles.habitName}>{habit.name}</Text>
-					<Text style={styles.goal}>Goal: {recentCompletions.length}/{habit.bonusFrequency} {this._returnDisplayInterval(habit)}</Text>
-					<View style={styles.row}>
+					<View style={styles.overlayContainer}>
+					<View style={styles.topRow}>
+						<Text style={styles.habitNameExpanded}>{habit.name}</Text>
+						<View style={styles.expandedPointValueContainer}>
+						<Text style={styles.pointValue}>{this._returnDisplayInterval(habit)}</Text>
+						<Text style={styles.pointValue}>{this._returnPointValueString(habit)}</Text>
+						</View>
+					</View>
+					<View style={styles.completionRow}>
 						{completions}
 					</View>
 
@@ -113,6 +125,9 @@ export class HabitListItem extends Component {
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
 		height: 75,
 		borderTopWidth: 1,
 		borderTopColor: '#dddddd',
@@ -120,37 +135,109 @@ var styles = StyleSheet.create({
 		borderBottomColor: '#eeeeee'
 
 	},
-	goalContainer: {
-		alignSelf: 'flex-start'
-		width: 55
-	},
-	habitNameContainer: {
+	overlayContainer: {
 		flex: 1,
 		flexDirection: 'column',
-		alignSelf: 'center',
-		paddingTop: 10,
-		width: 250
-	},
-	expanded:{
-		height: 135,
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		borderTopWidth: 1,
+		borderTopColor: '#dddddd',
+		borderBottomWidth: 1,
+		borderBottomColor: '#eeeeee',
 		paddingBottom: 10
 	},
-	habitName: {
-		fontSize: 18,
-		textAlign: 'center'
+	topRow:{
+		flex: 0,
+		flexDirection: 'row',
+		width: deviceWidth,
+		padding: 10,
+		paddingBottom: 5,
+		alignItems: 'center',
+		justifyContent: 'space-between'
 	},
-	goal: {
-		textAlign: 'center'
+	alignFlexStart: {
+		paddingLeft: 15,
+		alignSelf: 'flex-start'
 	},
-	row:{
+	pointValueContainer:{
 		flex: 1,
-		marginTop: 10,
+		width: 40,
+		borderRadius: 10,
+		margin: 5,
+		marginLeft: 10,
+		padding: 5,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FFBB20'
+	},
+	expandedPointValueContainer:{
+		flex: 0,
+		borderRadius: 10,
+		padding: 5,
+		flexDirection: 'column',
+		backgroundColor: '#FFBB20'
+	},
+	indicator:{
+		backgroundColor: '#CCCCCC',
+		borderRadius: 100,
+		height: 10,
+		width: 10,
+		margin: 2,
+		justifyContent: 'center'
+	},
+	completed: {
+		backgroundColor: '#59CC0D'
+	},
+	goalContainer: {
+		alignSelf: 'flex-start',
+		justifyContent: 'flex-start',
+		padding: 5,
+		width: 65,
+		height: 75,
+	},
+	pointValue: {
+		fontSize: 10,
+		fontWeight: '700',
+		color: '#FFFFFF',
+		textAlign: 'center',
+		
+	},
+	habitNameContainer: {
+		flex: 0,
+		paddingLeft: 7,
+		width: deviceWidth - 42,
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	habitName: {
+		marginTop: 5,
+		fontSize: 16,
+		textAlign: 'left'
+	},
+	habitNameExpanded: {
+		fontSize: 16,
+	},
+	indicatorRow: {
+		flex: 0,
+		marginTop: 5,
 		marginBottom: 10,
 		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	completionRow:{
+		flex: 0,
+		marginTop: 5,
+		marginBottom: 10,
+		width: deviceWidth - 50,
+		flexWrap: 'wrap',
+		flexDirection: 'row',
+		alignItems: 'center',
 		justifyContent: 'center'
 	},
 	editButton:{
-		color: '#1D62F0',
+		color: '#E85305',
 		textAlign: 'center'
 	}
 })

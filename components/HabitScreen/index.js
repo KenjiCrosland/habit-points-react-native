@@ -62,8 +62,6 @@ export class HabitScreen extends BaseComponent {
 					completions:[]
 				});
 		}
-		//console.log(currentInterval.completions);
-		console.log("bonusFrequency" + habit.bonusFrequency);
 		if (habit.intervals.length ){
 			let nextID = currentInterval.completions.length + 1 + Date.now();
 			currentInterval.completions.push({
@@ -198,6 +196,7 @@ var styles = StyleSheet.create({
 		paddingTop: 24
 	},
 	listview:{
+		flex: 1,
 		marginTop: 60,
 	},
 	listitem:{

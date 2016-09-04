@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Navigator,
   StatusBar,
+  StyleSheet,
   View, 
   Text, 
   TouchableHighlight 
@@ -37,42 +38,58 @@ export class HabitPointsNavigator extends Component {
     renderScene={this._renderScene}
     navigationBar={
       <Navigator.NavigationBar
-      style={{backgroundColor: 'gray'}}
+      style={styles.navigationBar}
       routeMapper={{
-       LeftButton: (route, navigator, index, navState) =>
-       { 
-         if(route.index === 0){
-          return null
-        } else {
+         LeftButton: (route, navigator, index, navState) =>
+         { 
+           if(route.index === 0){
+            return null
+          } else {
+            return (
+              <TouchableHighlight onPress={() => navigator.pop()}>
+              <Text>Back</Text>
+              </TouchableHighlight>
+              ); 
+          }
+        },
+        RightButton: (route, navigator, index, navState) =>
+        {
+         if (route.index === 0){
           return (
-            <TouchableHighlight onPress={() => navigator.pop()}>
-            <Text>Back</Text>
+            <TouchableHighlight onPress={() => navigator.push({
+              component: HabitFormScreen,
+              index: 1
+            })}>
+            <Text style={styles.addHabit}>+</Text>
             </TouchableHighlight>
-            ); 
-        }
-      },
-       RightButton: (route, navigator, index, navState) =>
-      {
-       if (route.index === 0){
-        return (
-          <TouchableHighlight onPress={() => navigator.push({
-            component: HabitFormScreen,
-            index: 1
-          })}>
-          <Text>New Habit</Text>
-          </TouchableHighlight>
-          )
-      } else {
-        return null;
-      } 
-    },
-    Title: (route, navigator, index, navState) =>
-    { return (<Text>HabitPoints</Text>) },
-    }}
-   />
-}
-
-/>
-);
+            )
+        } else {
+          return null;
+        } 
+        },
+        Title: (route, navigator, index, navState) =>
+        { return (<Text style={styles.mainTitle}>HabitPoints</Text>) },
+      }}
+    />
+  } 
+  />);
  }
 }
+var styles = StyleSheet.create({
+  navigationBar: {
+    backgroundColor: '#FFBB20'
+  },
+  addHabit: {
+    top: -7,
+    marginRight: 5,
+    padding: 2,
+    fontSize: 32,
+    color: '#FFFFFF',
+  },
+  mainTitle: {
+    top: 7,
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#FFFFFF'
+  }
+});

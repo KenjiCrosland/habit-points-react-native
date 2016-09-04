@@ -49,18 +49,18 @@ var styles = StyleSheet.create({
 	base: {
 		backgroundColor: '#CCCCCC',
 		borderRadius: 100,
-		height: 40,
-		width: 40,
+		height: 44,
+		width: 44,
 		margin: 3,
 		justifyContent: 'center'
 	},
 	touchable: {
 		borderRadius: 100,
-		height: 40,
-		width: 40
+		height: 44,
+		width: 44
 	},
 	completed: {
-		backgroundColor: '#33CC33'
+		backgroundColor: '#59CC0D'
 	},
 	transparent: {
 		borderRadius: 100,

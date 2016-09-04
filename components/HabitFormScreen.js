@@ -136,7 +136,7 @@ var styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    paddingTop: 24
+    marginTop: 60
   },
   picker: {
     width: 100,
