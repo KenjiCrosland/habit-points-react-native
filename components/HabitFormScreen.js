@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import {
 	StyleSheet,
 	TextInput,
-	Picker,
 	TouchableHighlight,
+	Dimensions,
 	View,
 	Text
 } from 'react-native';
 import realm from './Realm';
 import {PointPicker} from './PointPicker';
-
+import {IntervalPicker} from './IntervalPicker'
+let deviceWidth = Dimensions.get('window').width;
 class BaseComponent extends Component {
 	 _bind(...methods) {
 	  methods.forEach( (method) => this[method] = this[method].bind(this) );
@@ -27,7 +28,7 @@ export class HabitFormScreen extends BaseComponent {
 			bonusInterval: habit ? habit.bonusInterval : 'day',
 			bonusFrequency: habit ? habit.bonusFrequency.toString() : "1"
 		}
-		this._bind('_onPressButton', '_incrementFrequency', '_decrementFrequency', '_pickPointValue');
+		this._bind('_onPressButton', '_incrementFrequency', '_decrementFrequency', '_pickPointValue', '_pickIntervalValue');
 	}
 
 	_onPressButton(){
@@ -76,11 +77,15 @@ export class HabitFormScreen extends BaseComponent {
 		num = num.toString()
 		this.setState({pointValue: num});
 	}
+	_pickIntervalValue(interval){
+		this.setState({bonusInterval: interval})
+	}
 
 	render(){
 		let intervals = ['day', 'week', 'month'];
 		return(
 		<View style={styles.container}>
+		<View>
 			<Text>Habit Name:</Text>
 			 <TextInput
 			    style={styles.input}
@@ -88,11 +93,15 @@ export class HabitFormScreen extends BaseComponent {
 			    onChangeText={(text) => this.setState({habitName: text})}
 			    value={this.state.habitName}
 	  		/>
+	  	</View>
+	  	<View>
 	  	    <Text>Point Value:</Text>
 	  		<PointPicker 
 	  		numberOfButtons={7} 
 	  		currentPointValue={parseInt(this.state.pointValue)} 
 	  		pickPointValue={this._pickPointValue} />
+	  	</View>
+	  	<View>
 	  		<Text>Frequency:</Text>
 	  		<View style={styles.fieldset}>
 		  		<View style={styles.incrementer}>
@@ -111,15 +120,13 @@ export class HabitFormScreen extends BaseComponent {
 				    </TouchableHighlight>
 		  		</View>
 		  		<Text>Times a </Text>
-		  		<Picker
-		  		style={styles.picker}
-				  selectedValue={this.state.bonusInterval}
-				  onValueChange={(interval) => this.setState({bonusInterval: interval})}>
-				  <Picker.Item label="Day" value="day" />
-				  <Picker.Item label="Week" value="week" />
-				  <Picker.Item label="Month" value="month" />
-				</Picker>
+		  		<IntervalPicker 
+		  		currentInterval={this.state.bonusInterval}
+		  		pickIntervalValue={this._pickIntervalValue}
+		  		intervalArray={['day', 'week', 'month']}
+		  		/>
 		  	</View>
+		  </View>
 
 	  		<TouchableHighlight onPress={this._onPressButton}>
 		      <Text>Submit Habit!</Text>
@@ -133,20 +140,21 @@ export class HabitFormScreen extends BaseComponent {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    flexDirection: 'column',
+    width: deviceWidth - 20,
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: '#FFFFFF',
-    marginTop: 60
+    marginTop: 65
   },
   picker: {
     width: 100,
   },
   fieldset: {
   	flex: 0,
-  	height: 130,
-  	width: 35,
+  	width: deviceWidth - 20,
   	flexDirection: 'row',
-  	justifyContent: 'center',
+  	justifyContent: 'space-around',
   	alignItems: 'center'
   },
   incrementer: {
@@ -161,7 +169,7 @@ var styles = StyleSheet.create({
   input: {
   	textAlign: 'center',
   	height: 35,
-  	width: 350, 
+  	width: deviceWidth - 20, 
   	borderColor: 'gray', 
   	borderWidth: 1
   }

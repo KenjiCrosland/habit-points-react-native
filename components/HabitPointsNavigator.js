@@ -47,7 +47,7 @@ export class HabitPointsNavigator extends Component {
           } else {
             return (
               <TouchableHighlight onPress={() => navigator.pop()}>
-              <Text>Back</Text>
+              <Text style={styles.backButton}>Back</Text>
               </TouchableHighlight>
               ); 
           }
@@ -90,6 +90,13 @@ var styles = StyleSheet.create({
     top: 7,
     fontWeight: '700',
     fontSize: 16,
+    color: '#FFFFFF'
+  },
+  backButton:{
+    top: 8,
+    marginLeft: 5,
+    fontWeight: '700',
+    fontSize: 14,
     color: '#FFFFFF'
   }
 });

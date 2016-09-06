@@ -12,20 +12,20 @@ class BaseComponent extends Component {
 	 }
 }
 
-export class PointPicker extends BaseComponent {
+export class IntervalPicker extends BaseComponent {
 	constructor(props) {
 		super(props);
 	}
 	render(){
 		var buttons = [];
-		for (var i = 1; i <= this.props.numberOfButtons; i++){
+		for (var i = 0; i < this.props.intervalArray.length; i++){
 			buttons.push(
-				<PointPickerButton
-					key={i.toString()}
-					number={i.toString()} 
-					pickPointValue={this.props.pickPointValue} 
-					selected={this.props.currentPointValue === i ? true : false} 
-				/>
+			<IntervalPickerButton
+			key={this.props.intervalArray[i] + i.toString()}
+			interval={this.props.intervalArray[i]}
+			pickIntervalValue={this.props.pickIntervalValue} 
+			selected={this.props.currentInterval === this.props.intervalArray[i] ? true : false} 
+		   />
 			);
 		}
 		return (
@@ -36,17 +36,17 @@ export class PointPicker extends BaseComponent {
 	}
 }
 
-class PointPickerButton extends Component {
+class IntervalPickerButton extends Component {
 	constructor(props) {
 		super(props);
 	}
 	render(){
 		return (
 			<TouchableHighlight
-				onPress={() => this.props.pickPointValue(this.props.number)} 
+				onPress={() => this.props.pickIntervalValue(this.props.interval)} 
 				style={[styles.base, this.props.selected && styles.selected]}>
 				<View style={styles.transparent}>
-					<Text style={[styles.pickerText, this.props.selected && styles.whitePickerText]}>{this.props.number.toString()}</Text>
+					<Text style={[styles.pickerText, this.props.selected && styles.whitePickerText]}>{this.props.interval}</Text>
 				</View>
 			</TouchableHighlight>
 		)
