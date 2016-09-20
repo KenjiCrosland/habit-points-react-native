@@ -30,11 +30,13 @@ export class HabitScreen extends BaseComponent {
 			'_removeCompletion', 
 			'_isComplete',
 			'_hasPendingIntervals',
+			'_getTotalDailyPoints',
 			'_dateRangeIsCurrent');
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
-			dataSource: ds.cloneWithRows([])
+			dataSource: ds.cloneWithRows([]),
+			dailyPointTotal: 0,
 		}
 	}
 
@@ -112,15 +114,29 @@ export class HabitScreen extends BaseComponent {
 			})
 			}
 		}
+
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(habits)
+			dataSource: this.state.dataSource.cloneWithRows(habits),
+			dailyPointTotal: this._getTotalDailyPoints()
 		})
+	}
+
+	_getTotalDailyPoints(){
+		let total = 0;
+		let startOfDay = moment().startOf('day').toDate();
+		let dailyCompletions = realm.objects('Completion').filtered('completedOn > $0', startOfDay);
+		dailyCompletions.forEach(function(completion){
+			total += completion.pointValue;
+		});
+		return total;
 	}
 	
 	_refreshData(){
 		let habits = realm.objects('Habit');
+		this._getTotalDailyPoints();
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(habits)
+			dataSource: this.state.dataSource.cloneWithRows(habits),
+			dailyPointTotal: this._getTotalDailyPoints()
 		})
 	}
 	_isComplete(habit) {
@@ -173,6 +189,7 @@ export class HabitScreen extends BaseComponent {
 
 	render(){
 		return(
+<View>
 			<ListView
 			style={styles.listview}
 			dataSource={this.state.dataSource}
@@ -181,6 +198,10 @@ export class HabitScreen extends BaseComponent {
 			renderHeader={this._renderHeader}
 			renderFooter={this._renderFooter}
 			/>
+			<View>
+				<Text>Today's point count: {this.state.dailyPointTotal}</Text>
+			</View>
+						</View>
 			)
 
 	}

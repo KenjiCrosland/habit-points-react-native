@@ -55,10 +55,9 @@ class IntervalPickerButton extends Component {
 
 var styles = StyleSheet.create({
 	base:{
-		borderRadius: 100,
-		height: 40,
-		width: 40,
-		margin: 3,
+		borderRadius: 15,
+		height: 35,
+		width: 55,
 		justifyContent: 'center'
 	},
 	selected: {
@@ -71,14 +70,13 @@ var styles = StyleSheet.create({
 	pickerText: {
 		color: '#000000',
 		textAlign: 'center',
-		fontSize: 18
+		fontSize: 16
 	},
 	whitePickerText: {
 		color: '#FFFFFF'
 	},
 	buttonRow: {
-		flex: 0,
-		padding: 5,
+		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'space-around'
 	}

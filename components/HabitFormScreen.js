@@ -24,6 +24,7 @@ export class HabitFormScreen extends BaseComponent {
 		let habit = this.props.habit;
 		this.state = {
 			habitName: habit ? habit.name : "",
+			description: habit ? habit.description : "",
 			pointValue: habit ? habit.pointValue.toString() : "1",
 			bonusInterval: habit ? habit.bonusInterval : 'day',
 			bonusFrequency: habit ? habit.bonusFrequency.toString() : "1"
@@ -37,12 +38,14 @@ export class HabitFormScreen extends BaseComponent {
 			let habit = this.props.habit || realm.create('Habit', {
 					id: nextID,
 					name: this.state.habitName,
+					description: this.state.description,
 					pointValue: parseInt(this.state.pointValue),
 					bonusInterval: this.state.bonusInterval,
 					bonusFrequency: parseInt(this.state.bonusFrequency),
 				});
 			if(this.props.habit) {
 				habit.name = this.state.habitName;
+				habit.description = this.state.description;
 				habit.pointValue = parseInt(this.state.pointValue);
 				habit.bonusInterval = this.state.bonusInterval;
 				habit.bonusFrequency = parseInt(this.state.bonusFrequency);
@@ -95,6 +98,16 @@ export class HabitFormScreen extends BaseComponent {
 	  		/>
 	  	</View>
 	  	<View>
+	  		<Text>Description:</Text>
+	  		<TextInput
+	  			style={styles.textArea}
+	  			multiline={true}
+			    placeholder="Your description goes here"
+			    onChangeText={(text) => this.setState({description: text})}
+			    value={this.state.description}
+	  		/>
+	  	</View>
+	  	<View>
 	  	    <Text>Point Value:</Text>
 	  		<PointPicker 
 	  		numberOfButtons={7} 
@@ -119,7 +132,7 @@ export class HabitFormScreen extends BaseComponent {
 				      <Text style={styles.centerText}>-</Text>
 				    </TouchableHighlight>
 		  		</View>
-		  		<Text>Times a </Text>
+		  		<Text style={{fontSize: 16, padding: 5}}>Times a </Text>
 		  		<IntervalPicker 
 		  		currentInterval={this.state.bonusInterval}
 		  		pickIntervalValue={this._pickIntervalValue}
@@ -154,7 +167,7 @@ var styles = StyleSheet.create({
   	flex: 0,
   	width: deviceWidth - 20,
   	flexDirection: 'row',
-  	justifyContent: 'space-around',
+  	justifyContent: 'flex-start',
   	alignItems: 'center'
   },
   incrementer: {
@@ -165,6 +178,12 @@ var styles = StyleSheet.create({
   },
   numeric: {
   	width: 25,
+  },
+  textArea: {
+  	height: 60,
+  	width: deviceWidth - 20, 
+  	borderColor: 'gray', 
+  	borderWidth: 1
   },
   input: {
   	textAlign: 'center',

@@ -10,6 +10,7 @@ Habit.schema = {
 	properties: {
 		id: 'int', 
 		name: 'string',
+		description: 'string',
 		pointValue: 'int',
 		//Bonus interval: day, week, month
 		bonusInterval: {type: 'string', default: 'day'},
