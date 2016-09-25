@@ -66,21 +66,42 @@ export class StatsView extends BaseComponent {
 	render(){
 		let bars = [];
 		let xaxis = [];
+		let yaxis = [];
 		let count = 0;
-		let scaleY = this._getLargestPointValue(this.state.intervals);
+		let scaleY = this._getLargestPointValue(this.state.intervals) * 1.25
 		let scaleX = this.state.intervals.length;
 		this.state.intervals.forEach(function(interval){
 			count += 1;
-			calculatedBarHeight = ((chartHeight - 70)/scaleY) * interval.totalPoints;
+			calculatedBarHeight = (chartHeight/scaleY) * interval.totalPoints;
 			calculatedBarWidth = (chartWidth/scaleX) - 2;
-			bars.push(<View key={count} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}></View>);
-			if (count === 1 || count === 17 || count === scaleX){
-				xaxis.push(<Text style={styles.xaxisText}>9/{count}</Text>);
+			bars.push(<View key={count.toString() + "-bar"} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}><Text>{interval.totalPoints}</Text></View>);
+			if (count === 1 || count === 15 || count === scaleX){
+				xaxis.push(<Text key={count.toString() + "-barIncrement"} style={styles.xaxisText}>9/{count}</Text>);
 			}
 		});
 
+		const NUMBER_OF_INCREMENTS = 7;
+		let yIncrement = 5;
+		while (scaleY/NUMBER_OF_INCREMENTS > yIncrement){
+			yIncrement += 5;
+		}
+		let incrementHeight = yIncrement * (chartHeight/scaleY);
+		//let yPadding = (yIncrement * (chartHeight/scaleY)) % yIncrement;
+		for(i = 0; i < NUMBER_OF_INCREMENTS; i++){
+			let current = yIncrement * (i+1);
+			if(yIncrement * (chartHeight/scaleY) * i + incrementHeight <= chartHeight){
+			yaxis.unshift(
+			<View key={i.toString() + "-yIncrement"} style={[styles.yIncrementText, {height: incrementHeight}]}>
+				<Text>{current}</Text>
+			</View>);
+			}
+		}
+		
+
+
 		return (
 			<View style={styles.container}>
+			<View style={[styles.yaxis]}>{yaxis}</View>
 			<View style={styles.chart}>
 			{bars}
 			</View>
@@ -97,9 +118,11 @@ let chartWidth = deviceWidth - 40;
 const styles = StyleSheet.create({
 	container:{
 		flex: 1,
+		flexDirection:'row',
+		width: deviceWidth,
 		marginTop: 100,
 		marginBottom: 80,
-		marginLeft: 30,
+		marginLeft: 0,
 		marginRight: 10
 	},
 	bar: {
@@ -107,6 +130,17 @@ const styles = StyleSheet.create({
 	},
 	xaxisText:{
 		textAlign: 'center'
+	},
+	yaxis: {
+		flex:0,
+		width: 20,
+		height: chartHeight,
+		justifyContent: 'flex-end',
+		flexDirection: 'column'
+	},
+	yIncrementText: {
+		flex: 0,
+		flexDirection: 'column',
 	},
 	xaxis: {
 		flex: 1,
