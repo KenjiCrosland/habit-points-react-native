@@ -74,20 +74,20 @@ export class StatsView extends BaseComponent {
 			count += 1;
 			calculatedBarHeight = (chartHeight/scaleY) * interval.totalPoints;
 			calculatedBarWidth = (chartWidth/scaleX) - 2;
-			bars.push(<View key={count.toString() + "-bar"} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}><Text>{interval.totalPoints}</Text></View>);
+			bars.push(<View key={count.toString() + "-bar"} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}></View>);
 			if (count === 1 || count === 15 || count === scaleX){
 				xaxis.push(<Text key={count.toString() + "-barIncrement"} style={styles.xaxisText}>9/{count}</Text>);
 			}
 		});
 
-		const NUMBER_OF_INCREMENTS = 7;
+		const INCREMENT_COUNT = 7;
 		let yIncrement = 5;
-		while (scaleY/NUMBER_OF_INCREMENTS > yIncrement){
+		while (scaleY/INCREMENT_COUNT > yIncrement){
 			yIncrement += 5;
 		}
 		let incrementHeight = yIncrement * (chartHeight/scaleY);
 		//let yPadding = (yIncrement * (chartHeight/scaleY)) % yIncrement;
-		for(i = 0; i < NUMBER_OF_INCREMENTS; i++){
+		for(i = 0; i < INCREMENT_COUNT; i++){
 			let current = yIncrement * (i+1);
 			if(yIncrement * (chartHeight/scaleY) * i + incrementHeight <= chartHeight){
 			yaxis.unshift(
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
 	container:{
 		flex: 1,
 		flexDirection:'row',
+		flexWrap: 'wrap',
 		width: deviceWidth,
 		marginTop: 100,
 		marginBottom: 80,
@@ -143,10 +144,13 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 	},
 	xaxis: {
-		flex: 1,
+		flex: 0,
 		flexDirection: 'row',
 		height: 20,
+		marginLeft: 0,
 		width: chartWidth,
+		marginLeft: 20,
+		alignSelf: 'flex-start',
 		justifyContent: 'space-between'
 	},
 	chart: {
