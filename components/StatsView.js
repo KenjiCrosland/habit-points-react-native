@@ -73,7 +73,7 @@ export class StatsView extends BaseComponent {
 		this.state.intervals.forEach(function(interval){
 			count += 1;
 			calculatedBarHeight = (chartHeight/scaleY) * interval.totalPoints;
-			calculatedBarWidth = (chartWidth/scaleX) - 2;
+			calculatedBarWidth = (chartWidth/scaleX) - 2; //TODO: Change this number to a variable
 			bars.push(<View key={count.toString() + "-bar"} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}></View>);
 			if (count === 1 || count === 15 || count === scaleX){
 				xaxis.push(<Text key={count.toString() + "-barIncrement"} style={styles.xaxisText}>9/{count}</Text>);
@@ -100,37 +100,63 @@ export class StatsView extends BaseComponent {
 
 
 		return (
-			<View style={styles.container}>
-			<View style={[styles.yaxis]}>{yaxis}</View>
-			<View style={styles.chart}>
-			{bars}
+			<View style={styles.mainContainer}>
+			<View style={styles.topBar}>
+				<Text style={styles.topBarText}>Stats</Text>
 			</View>
-			<View style={styles.xaxis}>
-				{xaxis}
-			</View>
+
+				<View style={styles.container}>
+				<View style={[styles.yaxis]}>{yaxis}</View>
+				<View style={styles.chart}>
+				{bars}
+				</View>
+				<View style={styles.xaxis}>
+					{xaxis}
+				</View>
+				</View>
 			</View>
 		)
 	}
 }
 let chartHeight = deviceHeight - 200;
-let chartWidth = deviceWidth - 40;
+let chartWidth = deviceWidth - 50;
 
 const styles = StyleSheet.create({
+	mainContainer:{
+		height: deviceHeight
+	},
+	topBar: {
+		flex: 0,
+		alignItems: 'center',
+		backgroundColor: '#FFBB20',
+		height: 64,
+		width: deviceWidth
+	},
+	topBarText: {
+		color: '#FFFFFF',
+		top: 27,
+	    fontWeight: '700',
+	    fontSize: 16,
+	    color: '#FFFFFF'
+	},
 	container:{
 		flex: 1,
 		flexDirection:'row',
 		flexWrap: 'wrap',
 		width: deviceWidth,
-		marginTop: 100,
+		marginTop: 20,
 		marginBottom: 80,
-		marginLeft: 0,
+		marginLeft: 10,
 		marginRight: 10
 	},
 	bar: {
-		backgroundColor: '#EEEEEE'
+		marginLeft: 1,
+		marginRight: 1,
+		backgroundColor: '#FFBB20'
 	},
 	xaxisText:{
-		textAlign: 'center'
+		textAlign: 'center',
+		color: '#FA7B12'
 	},
 	yaxis: {
 		flex:0,
@@ -158,11 +184,9 @@ const styles = StyleSheet.create({
 		height: chartHeight,
 		flexDirection: 'row',
 		alignItems: 'flex-end',
-		justifyContent: 'space-between',
+		justifyContent: 'flex-start',
 		width: chartWidth,
 		borderBottomWidth: 1,
-		borderBottomColor: '#000000',
-		borderLeftWidth: 1,
-		borderLeftColor: '#000000'
+		borderBottomColor: '#EEEEEE'
 	}
 })
