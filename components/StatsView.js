@@ -4,9 +4,12 @@ import {
 	StyleSheet,
 	View,
 	Text,
+	TouchableHighlight,
 	Dimensions
 } from 'react-native';
 import realm from './Realm';
+import {IntervalPicker} from './IntervalPicker';
+
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 
@@ -19,12 +22,42 @@ class BaseComponent extends Component {
 export class StatsView extends BaseComponent {
 	constructor(props) {
 		super(props);
-		this._bind('_getTotalDailyPoints', '_getArrayOfDaysByMonth', '_getLargestPointValue');
+		this._bind('_getTotalDailyPoints', '_getArrayOfDaysByMonth', '_getLargestPointValue', '_getArrayOfDaysByWeek', '_pickIntervalValue');
 		this.state = {
-			intervalType: 'day',
-			intervals: this._getArrayOfDaysByMonth(),
+			intervalType: 'Week',
+			intervals: this._getArrayOfDaysByWeek(),
 		};
 		//TODO: Get new stats every time we go to this view....May need event listeners
+		//We also need to be able to cycle through
+	}
+	// _getArrayOfIntervals(){
+	// 	//TODO...switcth through intervals
+	// 	//getArrayOfDaysByWeek
+	// 	//getArrayOfLastEightWeeks
+	// 	//getYearly array
+	// }
+	_getArrayOfWeeks(){
+		//Get the sunday from 8 weeks ago
+		//Get the total of the total for each day
+		//Add labels to the bottom of each
+	}
+	_getArrayOfDaysByWeek(){
+		let self = this;
+		let arrayOfDays = [];
+		const DAYS_IN_WEEK = 7;
+
+		for(i = 0; i < DAYS_IN_WEEK; i++) {
+			let current = moment().day(i).toDate();
+			let number = i + 1;
+			arrayOfDays.push({[number]: current});
+		}
+
+		arrayOfDays.forEach(function(day, index){
+			day.totalPoints = self._getTotalDailyPoints(day, index);
+		});
+
+		console.log(arrayOfDays);
+		return arrayOfDays;
 	}
 	_getArrayOfDaysByMonth(){
 		let self = this;
@@ -62,22 +95,31 @@ export class StatsView extends BaseComponent {
 			return (previous > next ? previous : next);
 		});
 	}
+	_pickIntervalValue(interval){
+		this.setState({intervalType: interval})
+	}
 
 	render(){
 		let bars = [];
 		let xaxis = [];
 		let yaxis = [];
 		let count = 0;
+		let date = "";
 		let scaleY = this._getLargestPointValue(this.state.intervals) * 1.25
 		let scaleX = this.state.intervals.length;
+		//Choose interval type here.
 		this.state.intervals.forEach(function(interval){
 			count += 1;
 			calculatedBarHeight = (chartHeight/scaleY) * interval.totalPoints;
 			calculatedBarWidth = (chartWidth/scaleX) - 2; //TODO: Change this number to a variable
+			date = moment(interval[count]).format("M/DD");
 			bars.push(<View key={count.toString() + "-bar"} style={[styles.bar, {height: calculatedBarHeight, width: calculatedBarWidth}]}></View>);
-			if (count === 1 || count === 15 || count === scaleX){
-				xaxis.push(<Text key={count.toString() + "-barIncrement"} style={styles.xaxisText}>9/{count}</Text>);
-			}
+			xaxis.push(
+				<View key={count.toString() + "-barIncrement"} style={{width: calculatedBarWidth}}>
+				<Text  style={styles.xaxisText}>
+				{date}
+				</Text>
+				</View>);
 		});
 
 		const INCREMENT_COUNT = 7;
@@ -103,6 +145,14 @@ export class StatsView extends BaseComponent {
 			<View style={styles.mainContainer}>
 			<View style={styles.topBar}>
 				<Text style={styles.topBarText}>Stats</Text>
+			</View>
+			<View style={styles.menubar}>
+				<IntervalPicker 
+		  		currentInterval={this.state.intervalType}
+		  		pickIntervalValue={this._pickIntervalValue}
+		  		pickerType={"topBarMenu"}
+		  		intervalArray={['Day', 'Week', '8-Week', 'Year', 'Total']}
+		  		/>
 			</View>
 
 				<View style={styles.container}>
@@ -139,6 +189,12 @@ const styles = StyleSheet.create({
 	    fontSize: 16,
 	    color: '#FFFFFF'
 	},
+	menubar: {
+		flex: 0,
+		width: deviceWidth,
+		justifyContent: 'space-between',
+		flexDirection: 'row'
+	},
 	container:{
 		flex: 1,
 		flexDirection:'row',
@@ -156,7 +212,8 @@ const styles = StyleSheet.create({
 	},
 	xaxisText:{
 		textAlign: 'center',
-		color: '#FA7B12'
+		color: '#FA7B12',
+		fontSize: 10
 	},
 	yaxis: {
 		flex:0,

@@ -135,6 +135,7 @@ export class HabitFormScreen extends BaseComponent {
 		  		<Text style={{fontSize: 16, padding: 5}}>Times a </Text>
 		  		<IntervalPicker 
 		  		currentInterval={this.state.bonusInterval}
+		  		pickerType={"wideCirclePicker"}
 		  		pickIntervalValue={this._pickIntervalValue}
 		  		intervalArray={['day', 'week', 'month']}
 		  		/>

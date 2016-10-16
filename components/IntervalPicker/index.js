@@ -5,6 +5,9 @@ import {
 	View,
 	Text
 } from 'react-native';
+import wideCirclePicker from './styles/wideCirclePicker';
+import topBarMenu from './styles/topBarMenu';
+var styles;
 
 class BaseComponent extends Component {
 	 _bind(...methods) {
@@ -17,6 +20,11 @@ export class IntervalPicker extends BaseComponent {
 		super(props);
 	}
 	render(){
+		if (this.props.pickerType === "wideCirclePicker"){
+			styles = wideCirclePicker;
+		} else if (this.props.pickerType === "topBarMenu") {
+			styles = topBarMenu;
+		}
 		var buttons = [];
 		for (var i = 0; i < this.props.intervalArray.length; i++){
 			buttons.push(
@@ -46,38 +54,9 @@ class IntervalPickerButton extends Component {
 				onPress={() => this.props.pickIntervalValue(this.props.interval)} 
 				style={[styles.base, this.props.selected && styles.selected]}>
 				<View style={styles.transparent}>
-					<Text style={[styles.pickerText, this.props.selected && styles.whitePickerText]}>{this.props.interval}</Text>
+					<Text style={[styles.pickerText, this.props.selected && styles.selectedPickerText]}>{this.props.interval}</Text>
 				</View>
 			</TouchableHighlight>
 		)
 	}
 }
-
-var styles = StyleSheet.create({
-	base:{
-		borderRadius: 15,
-		height: 35,
-		width: 55,
-		justifyContent: 'center'
-	},
-	selected: {
-		backgroundColor: '#FA7B12'
-	},
-	transparent: {
-		borderRadius: 100,
-		backgroundColor: 'rgba(0,0,0,0)'
-	},
-	pickerText: {
-		color: '#000000',
-		textAlign: 'center',
-		fontSize: 16
-	},
-	whitePickerText: {
-		color: '#FFFFFF'
-	},
-	buttonRow: {
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-around'
-	}
-})
