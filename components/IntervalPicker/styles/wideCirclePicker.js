@@ -28,6 +28,9 @@ module.exports = StyleSheet.create({
 	whitePickerText: {
 		color: '#FFFFFF'
 	},
+	selectedPickerText: {
+		color: '#FFFFFF',
+	},
 	buttonRow: {
 		flex: 1,
 		flexDirection: 'row',
