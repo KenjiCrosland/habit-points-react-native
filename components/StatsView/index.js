@@ -8,6 +8,7 @@ import {
 	Dimensions
 } from 'react-native';
 import realm from '../Realm';
+import {DailyView} from './DailyView';
 import {Chart} from './Chart';
 import {IntervalPicker} from '../IntervalPicker';
 
@@ -29,13 +30,17 @@ export class StatsView extends BaseComponent {
 			'_getLargestPointValue', 
 			'_getArrayOfDaysByWeek', 
 			'_pickIntervalValue',
-			'_getArrayOfWeeks');
+			'_getArrayOfWeeks',
+			'_getArrayOfMonthsByYear',
+			'_getTotalDailyPoints');
 		this.state = {
 			intervalType: 'Week',
+			day: 'day',
+			thisWeek: this._getArrayOfDaysByWeek(),
+			multipleWeeks: this._getArrayOfWeeks(),
+			year: this._getArrayOfMonthsByYear(),
 			intervals: this._getArrayOfDaysByWeek(),
 		};
-		//TODO: Get new stats every time we go to this view....May need event listeners
-		//We also need to be able to cycle through
 	}
 
 	_getArrayOfWeeks(){
@@ -60,14 +65,10 @@ export class StatsView extends BaseComponent {
 
 		console.log(arrayOfWeeks);
 		return arrayOfWeeks;
-		//Loop through each week and create and use a getTotalWeeklyPoints Method
+		
 	}
-	_getTotalWeeklyPoints(){
-		//Do the thing that it says
-
-		//Array of sundays?
-
-		//Probably could use get total daily points.
+	_getArrayOfMonthsByYear(){
+//Do we even need this for an MVP?
 	}
 	_getArrayOfDaysByWeek(){
 		let self = this;
@@ -107,12 +108,20 @@ export class StatsView extends BaseComponent {
 	_getTotalPoints(intervalObj, intervalType, index){
 		let total = 0;
 		index = (index + 1).toString();
-		//Something funky going on here. It's undefined
 		console.log(intervalObj[index]);
 		let startOfInterval = moment(intervalObj[index]).startOf(intervalType).toDate();
 		let endOfInterval = moment(intervalObj[index]).endOf(intervalType).toDate();
 		let intervalCompletions = realm.objects('Completion').filtered('completedOn > $0 && completedOn < $1', startOfInterval, endOfInterval);
 		intervalCompletions.forEach(function(completion){
+			total += completion.pointValue;
+		});
+		return total;
+	}
+	_getTotalDailyPoints(){
+		let total = 0;
+		let startOfDay = moment().startOf('day').toDate();
+		let dailyCompletions = realm.objects('Completion').filtered('completedOn > $0', startOfDay);
+		dailyCompletions.forEach(function(completion){
 			total += completion.pointValue;
 		});
 		return total;
@@ -130,9 +139,32 @@ export class StatsView extends BaseComponent {
 		this.setState({intervalType: interval})
 	}
 	render(){
-		
 
-
+		let intervalMap = {
+			'Day': 'day',
+			'Week': 'thisWeek',
+			'8-Week': 'multipleWeeks',
+			'Year': 'year'
+		}
+		let current = intervalMap[this.state.intervalType];
+		if (this.state[current] === 'day'){
+			return (
+			<View style={styles.mainContainer}>
+				<View style={styles.topBar}>
+							<Text style={styles.topBarText}>Something else</Text>
+				</View>
+				<View style={styles.menubar}>
+					<IntervalPicker 
+			  		currentInterval={this.state.intervalType}
+			  		pickIntervalValue={this._pickIntervalValue}
+			  		pickerType="topBarMenu"
+			  		intervalArray={['Day', 'Week', '8-Week']}
+			  		/>
+				</View>
+				<DailyView />
+			</View>
+			)
+		}else{
 		return (
 			<View style={styles.mainContainer}>
 			<View style={styles.topBar}>
@@ -143,17 +175,18 @@ export class StatsView extends BaseComponent {
 		  		currentInterval={this.state.intervalType}
 		  		pickIntervalValue={this._pickIntervalValue}
 		  		pickerType="topBarMenu"
-		  		intervalArray={['Day', 'Week', '8-Week', 'Year', 'Total']}
+		  		intervalArray={['Day', 'Week', '8-Week']}
 		  		/>
 			</View>
  			<Chart 
-				scaleY={this._getLargestPointValue(this.state.intervals) * 1.25}
-				scaleX={this.state.intervals.length}
-				intervals={this.state.intervals}
+				scaleY={this._getLargestPointValue(this.state[current]) * 1.25}
+				scaleX={this.state[current].length}
+				intervals={this.state[current]}
 			/>
 			</View>
 		)
 	}
+}
 }
 let chartHeight = deviceHeight - 200;
 let chartWidth = deviceWidth - 50;

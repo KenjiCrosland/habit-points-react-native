@@ -57,8 +57,8 @@ export class Chart extends BaseComponent {
 			let current = yIncrement * (i+1);
 			if(yIncrement * (chartHeight/scaleY) * i + incrementHeight <= chartHeight){
 			yaxis.unshift(
-			<View key={i.toString() + "-yIncrement"} style={[styles.yIncrementText, {height: incrementHeight}]}>
-				<Text>{current}</Text>
+			<View key={i.toString() + "-yIncrement"} style={[styles.yIncrementView, {height: incrementHeight}]}>
+				<Text style={styles.yIncrementText}>{current}</Text>
 			</View>);
 			}
 		}
@@ -132,9 +132,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-end',
 		flexDirection: 'column'
 	},
-	yIncrementText: {
+	yIncrementView: {
 		flex: 0,
-		flexDirection: 'column',
+		flexDirection: 'column'
+	},
+	yIncrementText: {
+		fontSize: 12
 	},
 	xaxis: {
 		flex: 0,
