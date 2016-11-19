@@ -18,7 +18,7 @@ class HabitPoints extends Component {
     }
   render() {
   	let nav = <HabitPointsNavigator events={this.eventEmitter}/>;
-  	let stats = <StatsView />
+  	let stats = <StatsView events={this.eventEmitter} />
     return (
     	<TabNavigator>
     	<TabNavigator.Item

@@ -8,7 +8,7 @@ Habit.schema = {
 	name: 'Habit',
 	primaryKey: 'id',
 	properties: {
-		id: 'int', 
+		id: 'string', 
 		name: 'string',
 		description: 'string',
 		pointValue: 'int',
@@ -25,7 +25,7 @@ Interval.schema = {
 	name: 'Interval',
 	primaryKey: 'id',
 	properties: {
-		id: 'int', 
+		id: 'string', 
 		intervalStart: 'date',
 		intervalEnd: 'date',
 		allComplete: 'bool',
@@ -39,7 +39,9 @@ Completion.schema = {
 	name: 'Completion',
 	primaryKey: 'id',
 	properties: {
-	    id: 'int', 
+	    id: 'string',
+	    habitId: 'string',
+	    habitName: 'string', 
 		completedOn: 'date',
 		pointValue: 'int'
 	}

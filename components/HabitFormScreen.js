@@ -1,4 +1,5 @@
 import moment from 'moment/src/moment';
+import uuid from 'react-native-uuid';
 import React, { Component } from 'react';
 import {
 	StyleSheet,
@@ -36,7 +37,7 @@ export class HabitFormScreen extends BaseComponent {
 		realm.write(()=> {
 			var nextID = realm.objects('Habit').length + 1 + Date.now() || 0;
 			let habit = this.props.habit || realm.create('Habit', {
-					id: nextID,
+					id: uuid.v1(),
 					name: this.state.habitName,
 					description: this.state.description,
 					pointValue: parseInt(this.state.pointValue),
@@ -52,7 +53,7 @@ export class HabitFormScreen extends BaseComponent {
 			}
 			if (!this.props.habit) {
 				habit.intervals.push({
-					id: nextID,
+					id: uuid.v1(),
 					intervalStart: moment().startOf(this.state.bonusInterval).toDate(),
 					intervalEnd: moment().endOf(this.state.bonusInterval).toDate(),
 					allComplete: false,

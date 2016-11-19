@@ -59,9 +59,16 @@ class BaseComponent extends Component {
 		});
 	}
 	_renderRow(rowData){
+		var indicators = [];
+		for(let i = 0; i < rowData.total; i++) {
+			indicators.push(<View key={rowData.habitName + "indicator" + i} style={styles.indicator}></View>)
+		}
 			return (
-				<View>
+				<View style={styles.habitRow}>
 				<Text>{rowData.habitName}</Text>
+				<View style={styles.indicatorRow}>
+					{indicators}
+				</View>
 				</View>
 				);
 	}
@@ -91,6 +98,33 @@ class BaseComponent extends Component {
  }
 
  var styles = StyleSheet.create({
+	habitRow: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		height: 75,
+		borderTopWidth: 1,
+		borderTopColor: '#dddddd',
+		borderBottomWidth: 1,
+		borderBottomColor: '#eeeeee'
 
+	},
+	indicator:{
+		backgroundColor: '#59CC0D',
+		borderRadius: 100,
+		height: 10,
+		width: 10,
+		margin: 2,
+		justifyContent: 'center'
+	},
+	indicatorRow: {
+		flex: 0,
+		marginTop: 5,
+		marginBottom: 10,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
  })
 

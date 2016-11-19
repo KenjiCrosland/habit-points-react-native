@@ -11,6 +11,12 @@ import realm from '../Realm';
 import {DailyView} from './DailyView';
 import {Chart} from './Chart';
 import {IntervalPicker} from '../IntervalPicker';
+import reactMixin from 'react-mixin'
+import Subscribable from 'Subscribable';
+
+
+
+
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -32,7 +38,8 @@ export class StatsView extends BaseComponent {
 			'_pickIntervalValue',
 			'_getArrayOfWeeks',
 			'_getArrayOfMonthsByYear',
-			'_getTotalDailyPoints');
+			'_getTotalDailyPoints',
+			'_refreshData');
 		this.state = {
 			intervalType: 'Week',
 			day: 'day',
@@ -41,6 +48,21 @@ export class StatsView extends BaseComponent {
 			year: this._getArrayOfMonthsByYear(),
 			intervals: this._getArrayOfDaysByWeek(),
 		};
+	}
+
+	componentDidMount(){
+		 this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
+		 this.addListenerOn(this.props.events, 'allCompleted', this._refreshData);
+		 this._refreshData();
+	};
+
+	_refreshData(){
+		this.setState({
+			thisWeek: this._getArrayOfDaysByWeek(),
+			multipleWeeks: this._getArrayOfWeeks(),
+			year: this._getArrayOfMonthsByYear(),
+			intervals: this._getArrayOfDaysByWeek()
+		})
 	}
 
 	_getArrayOfWeeks(){
@@ -190,6 +212,8 @@ export class StatsView extends BaseComponent {
 }
 let chartHeight = deviceHeight - 200;
 let chartWidth = deviceWidth - 50;
+
+reactMixin(StatsView.prototype, Subscribable.Mixin);
 
 const styles = StyleSheet.create({
 	mainContainer:{
