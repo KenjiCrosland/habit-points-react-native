@@ -2,9 +2,11 @@ import moment from 'moment/src/moment';
 import uuid from 'react-native-uuid';
 import React, { Component } from 'react';
 import {
+	AppState,
 	StyleSheet,
 	View,
-	Text
+	Text,
+	Dimensions
 } from 'react-native';
 import { ListView } from 'realm/react-native';
 import {HabitListItem} from './HabitListItem';
@@ -12,7 +14,7 @@ import realm from '../Realm';
 
 import reactMixin from 'react-mixin'
 import Subscribable from 'Subscribable';
-
+let deviceHeight = Dimensions.get('window').height;
 class BaseComponent extends Component {
 	_bind(...methods) {
 		methods.forEach( (method) => this[method] = this[method].bind(this) );
@@ -37,12 +39,14 @@ export class HabitScreen extends BaseComponent {
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 		this.state = {
+			currentAppState: AppState.currentState,
 			dataSource: ds.cloneWithRows([]),
 			dailyPointTotal: 0,
 		}
 	}
 
 	componentDidMount(){
+		AppState.addEventListener('change', this._refreshData);
 		this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
 		this.addListenerOn(this.props.events, 'allCompleted', this._refreshData);
 		this._loadInitialData();
@@ -51,8 +55,6 @@ export class HabitScreen extends BaseComponent {
 	_addCompletion(habit){
 		let completedOn = new Date();
 		let currentInterval = habit.intervals[habit.intervals.length - 1];
-				console.log(currentInterval.intervalStart);
-		//current interval may not be defined. This completion code needs a look
 		realm.write(() => {
 			if (!habit.intervals.length ||
 				moment(currentInterval.intervalEnd).isBefore(completedOn) ||
@@ -109,9 +111,8 @@ export class HabitScreen extends BaseComponent {
 			let habit = habits[h];
 			if(!this._dateRangeIsCurrent(habit) && !this._hasPendingIntervals(habit)){
 			realm.write(() => {
-				let nextID = habit.intervals.length + 1 + Date.now();
 				habit.intervals.push({
-					id: nextID,
+					id: uuid.v1(),
 					intervalStart: moment().startOf(habit.bonusInterval).toDate(),
 					intervalEnd: moment().endOf(habit.bonusInterval).toDate(),
 					allComplete: false,
@@ -175,6 +176,7 @@ export class HabitScreen extends BaseComponent {
 		 if(!this._isComplete(rowData) && this._dateRangeIsCurrent(rowData)){
 			return <HabitListItem 
 					style={styles.listitem}
+					key={"habit-" + rowData.id}
 					habit={rowData} 
 					navigator={this.props.navigator} 
 					addCompletion={this._addCompletion}
@@ -213,7 +215,7 @@ export class HabitScreen extends BaseComponent {
 	}
 }
 reactMixin(HabitScreen.prototype, Subscribable.Mixin);
-
+let listViewHeight = deviceHeight - 120;
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -223,8 +225,10 @@ var styles = StyleSheet.create({
 		paddingTop: 24
 	},
 	listview:{
-		flex: 1,
+		flex: 0,
+		height: listViewHeight,
 		marginTop: 60,
+		marginBottom: 60
 	},
 	listitem:{
 		borderTopWidth: 1,

@@ -30,7 +30,9 @@ class HabitPoints extends Component {
     	 <TabNavigator.Item
     	    selected={this.state.selectedTab === 'stats'}
             title="Stats"
-            onPress={() => this.setState({ selectedTab: 'stats' })}>
+            onPress={() => 
+            	{this.setState({ selectedTab: 'stats' })
+            	this.eventEmitter.emit('tabSwitch')}}>
             {stats}
     	</TabNavigator.Item>
     	</TabNavigator>);

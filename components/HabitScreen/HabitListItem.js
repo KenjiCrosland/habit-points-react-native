@@ -72,8 +72,8 @@ export class HabitListItem extends Component {
 			} else {
 				completed = true;
 			}
-			completions.push(<CompletionButton key={habit.id + i} completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
-			indicators.push(<View key={habit.id + i} style={[styles.indicator, completed && styles.completed]}></View>)
+			completions.push(<CompletionButton key={"CompletionButton" + habit.id + i.toString()} completed={completed} addCompletion={this.props.addCompletion} removeCompletion={this.props.removeCompletion} habit={habit}/>);
+			indicators.push(<View key={"Indicator" + habit.id + i.toString()} style={[styles.indicator, completed && styles.completed]}></View>)
 		}
 		return(
 			<TouchableHighlight onPress={this._onPressRow}>

@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import { ListView } from 'realm/react-native';
 import realm from '../Realm';
+import reactMixin from 'react-mixin'
+import Subscribable from 'Subscribable';
 
 class BaseComponent extends Component {
 	 _bind(...methods) {
@@ -20,6 +22,7 @@ class BaseComponent extends Component {
      super(props);
 		this._bind(
 			'_getTotalDailyPoints',
+			'_loadData',
 			'_renderRow');
 		let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		this.state = {
@@ -28,10 +31,11 @@ class BaseComponent extends Component {
 		}
     }
     componentDidMount(){
-		this._loadInitialData();
+		this.addListenerOn(this.props.events, 'tabSwitch', this._loadData);
+		this._loadData();
 	}
 
-	_loadInitialData(){
+	_loadData(){
 		let dataArray = []
 		let todaysCompletions = {};
 		let startOfInterval = moment().startOf('day').toDate();
@@ -51,8 +55,6 @@ class BaseComponent extends Component {
 		for (key in todaysCompletions){
 			dataArray.push({habitName: key, total: todaysCompletions[key].total, pointValue: todaysCompletions[key].pointValue });
 		}
-		console.log(dataArray);
-
 	
 		this.setState({
 			dataSource: this.state.dataSource.cloneWithRows(dataArray),
@@ -96,6 +98,7 @@ class BaseComponent extends Component {
      );
    }
  }
+reactMixin(DailyView.prototype, Subscribable.Mixin);
 
  var styles = StyleSheet.create({
 	habitRow: {

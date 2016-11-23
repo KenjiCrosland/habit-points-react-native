@@ -39,7 +39,7 @@ export class StatsView extends BaseComponent {
 			'_getArrayOfWeeks',
 			'_getArrayOfMonthsByYear',
 			'_getTotalDailyPoints',
-			'_refreshData');
+			'_loadData');
 		this.state = {
 			intervalType: 'Week',
 			day: 'day',
@@ -51,17 +51,18 @@ export class StatsView extends BaseComponent {
 	}
 
 	componentDidMount(){
-		 this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
-		 this.addListenerOn(this.props.events, 'allCompleted', this._refreshData);
-		 this._refreshData();
+		 this.addListenerOn(this.props.events, 'tabSwitch', this._loadData);
+		 this._loadData();
 	};
 
-	_refreshData(){
+	_loadData(){
+		let thisWeek = this._getArrayOfDaysByWeek();
+		let multipleWeeks = this._getArrayOfWeeks();
 		this.setState({
-			thisWeek: this._getArrayOfDaysByWeek(),
-			multipleWeeks: this._getArrayOfWeeks(),
+			thisWeek: thisWeek,
+			multipleWeeks: multipleWeeks,
 			year: this._getArrayOfMonthsByYear(),
-			intervals: this._getArrayOfDaysByWeek()
+			intervals: thisWeek
 		})
 	}
 
@@ -85,7 +86,6 @@ export class StatsView extends BaseComponent {
 			week.totalPoints = self._getTotalPoints(week, 'week', index);
 		})
 
-		console.log(arrayOfWeeks);
 		return arrayOfWeeks;
 		
 	}
@@ -107,8 +107,6 @@ export class StatsView extends BaseComponent {
 		arrayOfDays.forEach(function(day, index){
 			day.totalPoints = self._getTotalPoints(day, 'day', index);
 		});
-
-		console.log(arrayOfDays);
 		return arrayOfDays;
 	}
 	_getArrayOfDaysByMonth(){
@@ -124,13 +122,11 @@ export class StatsView extends BaseComponent {
 		arrayOfDays.forEach(function(day, index){
 			day.totalPoints = self._getTotalPoints(day, 'day', index);
 		});
-		console.log(arrayOfDays);
 		return arrayOfDays;
 	}
 	_getTotalPoints(intervalObj, intervalType, index){
 		let total = 0;
 		index = (index + 1).toString();
-		console.log(intervalObj[index]);
 		let startOfInterval = moment(intervalObj[index]).startOf(intervalType).toDate();
 		let endOfInterval = moment(intervalObj[index]).endOf(intervalType).toDate();
 		let intervalCompletions = realm.objects('Completion').filtered('completedOn > $0 && completedOn < $1', startOfInterval, endOfInterval);
@@ -173,7 +169,7 @@ export class StatsView extends BaseComponent {
 			return (
 			<View style={styles.mainContainer}>
 				<View style={styles.topBar}>
-							<Text style={styles.topBarText}>Something else</Text>
+							<Text style={styles.topBarText}>Stats</Text>
 				</View>
 				<View style={styles.menubar}>
 					<IntervalPicker 
@@ -183,7 +179,7 @@ export class StatsView extends BaseComponent {
 			  		intervalArray={['Day', 'Week', '8-Week']}
 			  		/>
 				</View>
-				<DailyView />
+				<DailyView events={this.props.events} />
 			</View>
 			)
 		}else{
