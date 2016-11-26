@@ -66,11 +66,16 @@ export class Chart extends BaseComponent {
 
 
 		return (
+			<View style={styles.mainContainer}>
 			<View style={styles.container}>
 				<View style={[styles.yaxis]}>{yaxis}</View>
 				<View style={styles.chart}>
 				{bars}
 				</View>
+
+
+
+			</View>
 				<View style={styles.xaxis}>
 					{xaxis}
 				</View>
@@ -79,11 +84,12 @@ export class Chart extends BaseComponent {
 	}
 }
 let chartHeight = deviceHeight - 200;
-let chartWidth = deviceWidth - 50;
+let chartWidth = deviceWidth - 20;
 
 const styles = StyleSheet.create({
 	mainContainer:{
-		height: deviceHeight
+		flex: 1,
+		flexDirection: 'column'
 	},
 	topBar: {
 		flex: 0,
@@ -111,9 +117,7 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		width: deviceWidth,
 		marginTop: 20,
-		marginBottom: 80,
-		marginLeft: 10,
-		marginRight: 10
+		marginLeft: 10
 	},
 	bar: {
 		marginLeft: 1,
@@ -143,9 +147,8 @@ const styles = StyleSheet.create({
 		flex: 0,
 		flexDirection: 'row',
 		height: 20,
-		marginLeft: 0,
 		width: chartWidth,
-		marginLeft: 20,
+		marginLeft: 25,
 		alignSelf: 'flex-start',
 		justifyContent: 'space-between'
 	},

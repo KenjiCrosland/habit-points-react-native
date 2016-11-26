@@ -213,7 +213,8 @@ reactMixin(StatsView.prototype, Subscribable.Mixin);
 
 const styles = StyleSheet.create({
 	mainContainer:{
-		height: deviceHeight
+		flex: 1,
+		flexDirection: 'column'
 	},
 	topBar: {
 		flex: 0,
