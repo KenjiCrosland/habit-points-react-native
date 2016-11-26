@@ -8,10 +8,10 @@ import {
 module.exports = StyleSheet.create({
 
 	base:{
+		flex: 1,
 		borderTopWidth: 5,
 		borderTopColor: '#EEEEEE',
 		height: 35,
-		width: 65,
 		justifyContent: 'center'
 	},
 	selected: {

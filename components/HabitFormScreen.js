@@ -5,11 +5,13 @@ import {
 	StyleSheet,
 	TextInput,
 	TouchableHighlight,
+	TouchableWithoutFeedback,
 	Dimensions,
 	View,
 	Text
 } from 'react-native';
 import realm from './Realm';
+import dismissKeyboard from 'react-native-dismiss-keyboard';
 import {PointPicker} from './PointPicker';
 import {IntervalPicker} from './IntervalPicker'
 let deviceWidth = Dimensions.get('window').width;
@@ -78,16 +80,19 @@ export class HabitFormScreen extends BaseComponent {
 		}
 	}
 	_pickPointValue(num){
+		dismissKeyboard();
 		num = num.toString()
 		this.setState({pointValue: num});
 	}
 	_pickIntervalValue(interval){
+		dismissKeyboard();
 		this.setState({bonusInterval: interval})
 	}
 
 	render(){
 		let intervals = ['day', 'week', 'month'];
 		return(
+		<TouchableWithoutFeedback onPress={dismissKeyboard}>
 		<View style={styles.container}>
 		<View>
 			<Text>Habit Name:</Text>
@@ -146,7 +151,8 @@ export class HabitFormScreen extends BaseComponent {
 	  		<TouchableHighlight onPress={this._onPressButton}>
 		      <Text>Submit Habit!</Text>
 		    </TouchableHighlight>
-  		</View>
+		    </View>
+  		</TouchableWithoutFeedback>
 		)
 
 	}
