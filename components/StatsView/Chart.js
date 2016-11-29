@@ -84,7 +84,7 @@ export class Chart extends BaseComponent {
 	}
 }
 let chartHeight = deviceHeight - 200;
-let chartWidth = deviceWidth - 20;
+let chartWidth = deviceWidth - 30;
 
 const styles = StyleSheet.create({
 	mainContainer:{
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFBB20'
 	},
 	xaxisText:{
+		alignSelf: 'center',
 		textAlign: 'center',
 		color: '#FA7B12',
 		fontSize: 10
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		height: 20,
 		width: chartWidth,
-		marginLeft: 25,
+		marginLeft: 30,
 		alignSelf: 'flex-start',
 		justifyContent: 'space-between'
 	},
