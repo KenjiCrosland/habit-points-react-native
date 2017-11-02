@@ -160,7 +160,7 @@ var styles = StyleSheet.create({
 		alignSelf: 'flex-start'
 	},
 	pointValueContainer:{
-		flex: 1,
+		flex: 0,
 		width: 40,
 		borderRadius: 10,
 		margin: 5,

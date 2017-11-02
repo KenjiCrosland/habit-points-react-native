@@ -4,10 +4,6 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "jest-react-native"
   },
   "dependencies": {
     "moment": "^2.14.1",
@@ -18,15 +14,10 @@
     "react-native-dismiss-keyboard": "^1.0.0",
     "react-native-tab-navigator": "^0.3.3",
     "react-native-uuid": "^1.4.9",
-    "realm": "^0.14.1"
+    "realm": "2.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
-    "babel-jest": "^17.0.2",
-    "babel-preset-react-native": "^1.9.0",
-    "jest": "^17.0.3",
-    "jest-react-native": "^17.0.3",
-    "react-test-renderer": "^15.4.0",
-    "whatwg-fetch": "^2.0.1"
+    "babel-preset-react-native": "^1.9.0"
   }
 }

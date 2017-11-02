@@ -15,6 +15,9 @@ Habit.schema = {
 		//Bonus interval: day, week, month
 		bonusInterval: {type: 'string', default: 'day'},
 		bonusFrequency: 'int',
+		snoozeActive: 'bool',
+		snoozeInterval: {type: 'string', default: 'hour'},
+		snoozeIncrement: 'int',
 		intervals: {type:'list', objectType: 'Interval'}
 	}
 }
@@ -28,6 +31,7 @@ Interval.schema = {
 		id: 'string', 
 		intervalStart: 'date',
 		intervalEnd: 'date',
+		snoozeEnd: 'date',
 		allComplete: 'bool',
 		completions: {type: 'list', objectType: 'Completion'}
 	}

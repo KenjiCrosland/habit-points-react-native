@@ -30,7 +30,10 @@ export class HabitFormScreen extends BaseComponent {
 			description: habit ? habit.description : "",
 			pointValue: habit ? habit.pointValue.toString() : "1",
 			bonusInterval: habit ? habit.bonusInterval : 'day',
-			bonusFrequency: habit ? habit.bonusFrequency.toString() : "1"
+			bonusFrequency: habit ? habit.bonusFrequency.toString() : "1",
+			snoozeActive: habit ? habit.snoozeActive : true,
+			snoozeInterval: habit ? habit.snoozeInterval : 'hour',
+			snoozeIncrement: habit ? habit.snoozeIncrement.toString() : "1"
 		}
 		this._bind('_onPressButton', '_incrementFrequency', '_decrementFrequency', '_pickPointValue', '_pickIntervalValue');
 	}
@@ -45,6 +48,9 @@ export class HabitFormScreen extends BaseComponent {
 					pointValue: parseInt(this.state.pointValue),
 					bonusInterval: this.state.bonusInterval,
 					bonusFrequency: parseInt(this.state.bonusFrequency),
+					snoozeActive: this.state.snoozeActive,
+					snoozeInterval: this.state.snoozeInterval,
+					snoozeIncrement: parseInt(this.state.snoozeIncrement)
 				});
 			if(this.props.habit) {
 				habit.name = this.state.habitName;
@@ -52,12 +58,16 @@ export class HabitFormScreen extends BaseComponent {
 				habit.pointValue = parseInt(this.state.pointValue);
 				habit.bonusInterval = this.state.bonusInterval;
 				habit.bonusFrequency = parseInt(this.state.bonusFrequency);
+				habit.snoozeActive = this.state.snoozeActive;
+				habit.snoozeInterval = this.state.snoozeInterval;
+				habit.snoozeIncrement = parseInt(this.state.snoozeIncrement);
 			}
 			if (!this.props.habit) {
 				habit.intervals.push({
 					id: uuid.v1(),
 					intervalStart: moment().startOf(this.state.bonusInterval).toDate(),
 					intervalEnd: moment().endOf(this.state.bonusInterval).toDate(),
+					snoozeEnd: moment().startOf(this.state.bonusInterval).toDate(),
 					allComplete: false,
 					completions: []
 					});

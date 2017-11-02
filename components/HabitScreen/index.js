@@ -46,7 +46,7 @@ export class HabitScreen extends BaseComponent {
 	}
 
 	componentDidMount(){
-		AppState.addEventListener('change', this._refreshData);
+		AppState.addEventListener('change', this._loadInitialData);
 		this.addListenerOn(this.props.events, 'habitSaved', this._refreshData);
 		this.addListenerOn(this.props.events, 'allCompleted', this._refreshData);
 		this._loadInitialData();
@@ -115,6 +115,7 @@ export class HabitScreen extends BaseComponent {
 					id: uuid.v1(),
 					intervalStart: moment().startOf(habit.bonusInterval).toDate(),
 					intervalEnd: moment().endOf(habit.bonusInterval).toDate(),
+					snoozeEnd: moment().startOf(this.state.bonusInterval).toDate(),
 					allComplete: false,
 					completions:[]
 				});
